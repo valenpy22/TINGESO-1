@@ -40,7 +40,7 @@ public class StudentService {
     }
 
     public double getDiscountBySeniorYear(StudentEntity student){
-        int senior_year = student.getSenior_year();
+        /*int senior_year = student.getSenior_year();
         Date current_time = new Date();
         Calendar calendar = Calendar.getInstance();
 
@@ -58,6 +58,8 @@ public class StudentService {
         }
 
         //return arancel
+
+         */
         return 1.0;
     }
 
