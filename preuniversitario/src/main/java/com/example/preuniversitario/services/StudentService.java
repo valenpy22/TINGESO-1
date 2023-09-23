@@ -19,8 +19,22 @@ public class StudentService {
         return (ArrayList<StudentEntity>) studentRepository.findAll();
     }
 
-    public StudentEntity saveStudent(StudentEntity student){
-        return studentRepository.save(student);
+    public void saveStudent(String rut,
+                                     String names,
+                                     String surnames,
+                                     String birthday,
+                                     String school_type,
+                                     String school_name,
+                                     int senior_year){
+        StudentEntity student = new StudentEntity();
+        student.setRut(rut);
+        student.setNames(names);
+        student.setSurnames(surnames);
+        student.setBirthday(birthday);
+        student.setSchool_type(school_type);
+        student.setSchool_name(school_name);
+        student.setSenior_year(senior_year);
+        studentRepository.save(student);
     }
 
     public Optional<StudentEntity> getByRut(String rut){

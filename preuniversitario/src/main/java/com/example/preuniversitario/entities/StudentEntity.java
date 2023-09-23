@@ -20,11 +20,9 @@ public class StudentEntity {
     @Column(unique = true, nullable = false)
     private String rut;
 
-    private String m_surname;
-    private String f_surname;
-    private String first_name;
-    private String second_name;
-    private Date birthday;
+    private String names;
+    private String surnames;
+    private String birthday;
     private String school_type;
     private String school_name;
     private int senior_year;
