@@ -42,19 +42,24 @@ public class StudentService {
     }
 
     public double getDiscountBySchoolType(StudentEntity student){
+
+        double monthly_fee = 1500000;
+
         String school_type = student.getSchool_type();
 
         if(school_type.equals("Municipal")){
-            //arancel = arancel*0.8
+            monthly_fee = monthly_fee * 0.8;
         }else if(school_type.equals("Subvencionado")){
-            //arancel = arancel*0.9
+            monthly_fee = monthly_fee * 0.9;
         }
-        //return arancel
-        return 1.0;
+
+        return monthly_fee;
     }
 
     public double getDiscountBySeniorYear(StudentEntity student){
-        /*int senior_year = student.getSenior_year();
+        double monthly_fee = 1500000;
+
+        int senior_year = student.getSenior_year();
         Date current_time = new Date();
         Calendar calendar = Calendar.getInstance();
 
@@ -63,18 +68,31 @@ public class StudentService {
 
         int years_since_promotion = current_year - senior_year;
 
+        //HERE WE HAVE TO TAKE THE EXAMPLE OF WHEN IT'S FROM
+        //DECEMBER TO THE OTHER YEAR
         if(years_since_promotion < 1){
-            //arancel = arancel*0.85
+            monthly_fee = monthly_fee * 0.85;
         }else if(years_since_promotion >= 1 && years_since_promotion <= 2){
-            //arancel = arancel*0.92
+            monthly_fee = monthly_fee * 0.92;
         }else if(years_since_promotion >= 3 && years_since_promotion <= 4){
-            //arancel = arancel*0.96
+            monthly_fee = monthly_fee * 0.96;
         }
 
-        //return arancel
+        return monthly_fee;
+    }
 
-         */
-        return 1.0;
+    public int getMaxFee(StudentEntity student){
+        String school_type = student.getSchool_type();
+
+        int max_fee = 4;
+
+        if(school_type.equals("Municipal")){
+            max_fee = 10;
+        }else if(school_type.equals("Subvencionado")){
+            max_fee = 7;
+        }
+
+        return max_fee;
     }
 
 }
