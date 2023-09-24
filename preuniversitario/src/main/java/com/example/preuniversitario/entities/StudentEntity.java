@@ -19,7 +19,6 @@ public class StudentEntity {
     @Id
     @Column(unique = true, nullable = false)
     private String rut;
-
     private String names;
     private String surnames;
     private String birthday;

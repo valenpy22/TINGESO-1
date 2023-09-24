@@ -8,7 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 
@@ -37,7 +40,15 @@ public class ReportSummaryService {
         reportSummary.setRut(current_student.getRut());
         reportSummary.setNames(current_student.getNames());
         reportSummary.setSurnames(current_student.getSurnames());
-
+        //number of exams
+        //average score
+        //total price
+        //payment method
+        reportSummary.setTotal_fees(calculateMaxFee(current_student.getSchool_type()));
+        //total paid
+        //last date paid
+        //to pay
+        //number of late fees
 
     }
 
@@ -51,54 +62,41 @@ public class ReportSummaryService {
         return total_discount;
     }
 
+    public double calculateDiscountBySeniorYear(int senior_year){
+
+        LocalDate dBefore = LocalDate.parse("31/12/" + Integer.toString(senior_year), DateTimeFormatter.ISO_DATE);
+        LocalDate dAfter = LocalDate.now();
+
+        long diff = dBefore.until(dAfter, ChronoUnit.YEARS);
+
+        double total_discount = 1500000;
+
+        if(diff < 1){
+            total_discount = total_discount * 0.15;
+        }else if(diff >= 1 && diff <= 2){
+            total_discount = total_discount * 0.08;
+        }else if(diff >= 3 && diff <= 4){
+            total_discount = total_discount * 0.04;
+        }
+
+        return total_discount;
+
+    }
+
     public int calculateMaxFee(String school_type){
-        int max_fee = 4;
+        int max_fees = 4;
 
         if(school_type.equals("Municipal")){
-            max_fee = 10;
+            max_fees = 10;
         }else if(school_type.equals("Subvencionado")){
-            max_fee = 7;
+            max_fees = 7;
         }
 
-        return max_fee;
+        return max_fees;
     }
 
-    public double getDiscountByAverageScore(int average_score, double fee_price){
-        if(average_score >= 950 && average_score <= 1000){
-            fee_price = fee_price * 0.9;
-        }else if(average_score >= 900 && average_score <= 949){
-            fee_price = fee_price * 0.95;
-        }else if(average_score >= 850 && average_score <= 899){
-            fee_price = fee_price * 0.98;
-        }
-        return fee_price;
-    }
+    //calculateDiscountByAverageScore
 
-    public double getInterestByLateFee(int months_late){
-        double interest = 0;
-        if(months_late > 3){
-            interest = 0.15;
-        }else if(months_late == 3){
-            interest = 0.09;
-        }else if(months_late == 2){
-            interest = 0.06;
-        }else if(months_late == 1){
-            interest = 0.03;
-        }
-        return interest;
-    }
-
-    public double calculateDiscountBySeniorYear(int senior_year){
-        LocalDate current_date = LocalDate.now();
-
-        int year = current_date.getYear();
-        int month = current_date.getMonthValue();
-
-        int month_of_promotion = 12;
-
-        return 1.0;
-
-
-    }
+    //calculateInterestByMonthsLate
 
 }

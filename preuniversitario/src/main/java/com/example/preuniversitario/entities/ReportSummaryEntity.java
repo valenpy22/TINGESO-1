@@ -28,7 +28,7 @@ public class ReportSummaryEntity {
     private String payment_method;
     private int total_fees;
     private int payed_fees;
-    private double total_payed;
+    private double total_paid;
     private Date last_payment;
     private double debt;
     private int late_fees;

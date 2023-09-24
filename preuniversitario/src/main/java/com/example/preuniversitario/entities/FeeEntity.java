@@ -3,18 +3,17 @@ package com.example.preuniversitario.entities;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Generated;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "payments")
+@Table(name = "fees")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class PaymentEntity {
+public class FeeEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer ID;
+    @Column(nullable = false)
     private String rut;
-    private String payment_date;
+    private String max_date_payment;
+    private String state;
 }

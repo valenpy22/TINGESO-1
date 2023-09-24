@@ -15,8 +15,6 @@ import java.util.Date;
 public class UploadDataEntity {
     @Id
     @Column(nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer ID;
     private String rut;
     private String exam_date;
     private String score;
