@@ -3,22 +3,18 @@ package com.example.preuniversitario.entities;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Generated;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
 @Entity
-@Table(name = "data")
+@Table(name = "payments")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class UploadDataEntity {
+public class PaymentEntity {
     @Id
-    @Column(nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer ID;
+    private Integer id;
     private String rut;
-    private String exam_date;
-    private String score;
-
+    private String payment_date;
 }

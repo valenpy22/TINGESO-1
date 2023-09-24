@@ -33,10 +33,15 @@ public class StudentService {
         studentRepository.save(student);
     }
 
-    public Optional<StudentEntity> getByRut(String rut){
+    public Optional<StudentEntity> findByRut(String rut){
         return studentRepository.findById(rut);
     }
 
+    public String getSchoolType(String rut){
+        return studentRepository.findSchoolType(rut);
+    }
+
+    /*
     public double getDiscountBySchoolType(StudentEntity student){
 
         double monthly_fee = 1500000;
@@ -123,5 +128,7 @@ public class StudentService {
 
     //Get number of exams by month
     //Get average score by month
+    
+     */
 
 }

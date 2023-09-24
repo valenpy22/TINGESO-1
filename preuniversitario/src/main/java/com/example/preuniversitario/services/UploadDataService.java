@@ -16,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class UploadDataService {
@@ -99,5 +100,9 @@ public class UploadDataService {
         new_data.setScore(score);
 
         saveData(new_data);
+    }
+
+    public List<String> getRuts(){
+        return uploadDataRepository.findDistinctRut();
     }
 }

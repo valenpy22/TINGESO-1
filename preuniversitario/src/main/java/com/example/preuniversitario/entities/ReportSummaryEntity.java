@@ -1,5 +1,6 @@
 package com.example.preuniversitario.entities;
 
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -11,19 +12,24 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 
 @Entity
-@Table(name = "students")
+@Table(name = "reports")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class StudentEntity {
+public class ReportSummaryEntity {
     @Id
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String rut;
-
     private String names;
     private String surnames;
-    private String birthday;
-    private String school_type;
-    private String school_name;
-    private int senior_year;
+    private int exam_number;
+    private double average_score;
+    private double final_price;
+    private String payment_method;
+    private int total_fees;
+    private int payed_fees;
+    private double total_payed;
+    private Date last_payment;
+    private double debt;
+    private int late_fees;
 }
