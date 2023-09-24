@@ -105,4 +105,5 @@ public class UploadDataService {
     public List<String> getRuts(){
         return uploadDataRepository.findDistinctRut();
     }
+
 }
