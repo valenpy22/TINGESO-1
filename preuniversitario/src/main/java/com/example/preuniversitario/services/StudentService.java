@@ -1,6 +1,7 @@
 package com.example.preuniversitario.services;
 
 import com.example.preuniversitario.entities.StudentEntity;
+import com.example.preuniversitario.entities.UploadDataEntity;
 import com.example.preuniversitario.repositories.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,13 +20,8 @@ public class StudentService {
         return (ArrayList<StudentEntity>) studentRepository.findAll();
     }
 
-    public void saveStudent(String rut,
-                                     String names,
-                                     String surnames,
-                                     String birthday,
-                                     String school_type,
-                                     String school_name,
-                                     int senior_year){
+    public void saveStudent(String rut, String names, String surnames, String birthday,
+                            String school_type, String school_name, int senior_year){
         StudentEntity student = new StudentEntity();
         student.setRut(rut);
         student.setNames(names);
@@ -94,5 +90,38 @@ public class StudentService {
 
         return max_fee;
     }
+
+    public double getDiscountByAverageScore(int average_score){
+        double new_fee_price = 0;
+        if(average_score >= 950 && average_score <= 1000){
+            new_fee_price = 0.9;
+        }else if(average_score >= 900 && average_score <= 949){
+            new_fee_price = 0.95;
+        }else if(average_score >= 850 && average_score <= 899){
+            new_fee_price = 0.98;
+        }
+        return new_fee_price;
+    }
+
+    public double getInterestByLateFee(int months_late){
+        double interest = 0;
+        if(months_late > 3){
+            interest = 0.15;
+        }else if(months_late == 3){
+            interest = 0.09;
+        }else if(months_late == 2){
+            interest = 0.06;
+        }else if(months_late == 1){
+            interest = 0.03;
+        }
+        return interest;
+    }
+
+    public double getDiscountByCashPayment(int total_price){
+        return total_price*0.5;
+    }
+
+    //Get number of exams by month
+    //Get average score by month
 
 }

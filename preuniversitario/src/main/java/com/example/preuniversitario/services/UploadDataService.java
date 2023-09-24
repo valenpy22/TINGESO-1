@@ -3,6 +3,7 @@ package com.example.preuniversitario.services;
 import com.example.preuniversitario.entities.UploadDataEntity;
 import com.example.preuniversitario.repositories.UploadDataRepository;
 import lombok.Generated;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,14 +16,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.logging.Logger;
 
 @Service
 public class UploadDataService {
     @Autowired
     UploadDataRepository uploadDataRepository;
 
-    private final Logger logg = (Logger) LoggerFactory.getLogger(UploadDataService.class);
+    private final Logger logg = LoggerFactory.getLogger(UploadDataService.class);
 
     public ArrayList<UploadDataEntity> getData(){
         return (ArrayList<UploadDataEntity>) uploadDataRepository.findAll();
@@ -39,7 +39,7 @@ public class UploadDataService {
                     Files.write(path, bytes);
                     logg.info("File saved");
                 }catch(IOException e){
-                    logg.warning("ERROR");
+                    logg.error("ERROR", e);
                 }
             }
             return "File saved succesfully";
@@ -78,7 +78,7 @@ public class UploadDataService {
                 try{
                     buffer.close();
                 }catch (IOException e){
-                    logg.warning("ERROR");
+                    logg.error("ERROR", e);
                 }
             }
         }
@@ -92,10 +92,10 @@ public class UploadDataService {
         uploadDataRepository.deleteAll(datas);
     }
 
-    public void saveDataDB(String exam_date, String rut, String score){
+    public void saveDataDB(String rut, String exam_date, String score){
         UploadDataEntity new_data = new UploadDataEntity();
-        new_data.setExam_date(exam_date);
         new_data.setRut(rut);
+        new_data.setExam_date(exam_date);
         new_data.setScore(score);
 
         saveData(new_data);

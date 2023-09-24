@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UploadDataRepository extends CrudRepository<UploadDataEntity, String> {
+    public int findByRut(String rut);
 }
