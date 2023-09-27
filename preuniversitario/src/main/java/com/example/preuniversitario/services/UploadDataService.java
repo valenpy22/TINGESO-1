@@ -106,4 +106,7 @@ public class UploadDataService {
         return uploadDataRepository.findDistinctRut();
     }
 
+    public double getAverageScoreByRutAndMonth(String rut, String exam_date){
+        return uploadDataRepository.getAverageScoreByRutAndMonth(rut, exam_date);
+    }
 }

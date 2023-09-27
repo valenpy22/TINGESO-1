@@ -3,6 +3,7 @@ package com.example.preuniversitario.services;
 import com.example.preuniversitario.entities.FeeEntity;
 import com.example.preuniversitario.entities.ReportSummaryEntity;
 import com.example.preuniversitario.entities.StudentEntity;
+import com.example.preuniversitario.entities.UploadDataEntity;
 import com.example.preuniversitario.repositories.ReportSummaryRepository;
 import com.example.preuniversitario.repositories.UploadDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,8 +100,6 @@ public class ReportSummaryService {
         return max_fees;
     }
 
-    //calculateDiscountByAverageScore
-
     public double calculateInterestByMonthsLate(int months_late, FeeEntity fee){
         double interest = 0;
         if(fee.getState().equals("PENDING")){
@@ -119,6 +118,22 @@ public class ReportSummaryService {
             }
         }
         return interest;
+    }
+
+    public double calculateDiscountByAverageScore(UploadDataEntity uploadData, FeeEntity fee){
+        double discount = 0;
+
+        double average_score = this.uploadDataService.getAverageScoreByRutAndMonth(uploadData.getRut(), uploadData.getExam_date());
+
+        if(average_score >= 950 && average_score <= 1000){
+            discount = fee.getPrice()*0.1;
+        }else if(average_score >= 900 && average_score <= 949){
+            discount = fee.getPrice()*0.05;
+        }else if(average_score >= 850 && average_score <= 899){
+            discount = fee.getPrice()*0.02;
+        }
+
+        return discount;
     }
 
 

@@ -14,4 +14,6 @@ public interface FeeRepository extends JpaRepository<FeeEntity, String> {
 
     @Query(value = "SELECT * FROM fees WHERE fees.rut = :rut", nativeQuery = true)
     FeeEntity searchFees(@Param("rut") String rut);
+
+
 }
