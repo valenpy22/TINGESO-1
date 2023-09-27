@@ -140,7 +140,7 @@ public class ReportSummaryService {
 
         int count = 0;
         for(FeeEntity fee : fees){
-            if(isFeeLate(rut, fee)){
+            if(isFeeLate(fee)){
                 count++;
             }
         }
