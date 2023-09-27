@@ -16,4 +16,6 @@ public class FeeEntity {
     private String rut;
     private String max_date_payment;
     private String state;
+    private String payment_date;
+    private double price;
 }

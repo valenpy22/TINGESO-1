@@ -1,5 +1,6 @@
 package com.example.preuniversitario.services;
 
+import com.example.preuniversitario.entities.FeeEntity;
 import com.example.preuniversitario.entities.ReportSummaryEntity;
 import com.example.preuniversitario.entities.StudentEntity;
 import com.example.preuniversitario.repositories.ReportSummaryRepository;
@@ -25,6 +26,9 @@ public class ReportSummaryService {
 
     @Autowired
     private StudentService studentService;
+
+    @Autowired
+    private FeeService feeService;
 
     public void getReportSummary() throws ParseException {
         reportSummaryRepository.deleteAll();
@@ -97,6 +101,25 @@ public class ReportSummaryService {
 
     //calculateDiscountByAverageScore
 
-    //calculateInterestByMonthsLate
+    public double calculateInterestByMonthsLate(int months_late, FeeEntity fee){
+        double interest = 0;
+        if(fee.getState().equals("PENDING")){
+            if(months_late > 3){
+                interest = fee.getPrice()*1.15;
+                fee.setPrice(interest);
+            }else if(months_late == 3){
+                interest = fee.getPrice()*1.09;
+                fee.setPrice(interest);
+            }else if(months_late == 2){
+                interest = fee.getPrice()*1.06;
+                fee.setPrice(interest);
+            }else if(months_late == 1){
+                interest = fee.getPrice()*1.03;
+                fee.setPrice(interest);
+            }
+        }
+        return interest;
+    }
+
 
 }

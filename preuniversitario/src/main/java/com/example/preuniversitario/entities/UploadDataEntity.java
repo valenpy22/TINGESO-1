@@ -18,5 +18,4 @@ public class UploadDataEntity {
     private String rut;
     private String exam_date;
     private String score;
-
 }

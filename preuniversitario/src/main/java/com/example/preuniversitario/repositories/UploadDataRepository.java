@@ -21,4 +21,9 @@ public interface UploadDataRepository extends JpaRepository<UploadDataEntity, In
     @Query(value = "SELECT data.exam_date FROM data WHERE data.rut = :rut LIMIT 1", nativeQuery = true)
     String findDateByRut(@Param("rut") String rut);
 
+    @Query(value = "SELECT * FROM data WHERE data.rut = :rut", nativeQuery = true)
+    String findExamsByRut(@Param("rut") String rut);
+
+    @Query(value = "SELECT COUNT(*) as count_exams, YEAR(exam_date) AS year, MONTH(exam_date) AS month FROM data WHERE data.rut = :rut AND data.exam_date = :exam_date GROUP BY YEAR(exam_date), MONTH(exam_date)", nativeQuery = true)
+    String findExamsByRutByMonth(@Param("rut") String rut, @Param("exam_date") String exam_date);
 }

@@ -41,6 +41,4 @@ public class StudentService {
         return studentRepository.findSchoolType(rut);
     }
 
-
-
 }
