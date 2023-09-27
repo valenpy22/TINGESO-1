@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -24,8 +25,8 @@ public class FeeService {
         this.feeRepository.save(fee);
     }
 
-    public FeeEntity findFee(String rut, String payment_date){
-        return this.feeRepository.searchFee(rut, payment_date);
+    public List<FeeEntity> findFees(String rut){
+        return this.feeRepository.searchFees(rut);
     }
 
     public void deleteFee(FeeEntity fee){
@@ -52,27 +53,4 @@ public class FeeService {
         }
     }
 
-    public long calculateMonthsLate(FeeEntity fee){
-        String max_date_payment = fee.getMax_date_payment();
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
-        LocalDate max_date = LocalDate.parse(max_date_payment, formatter);
-        LocalDate date_now = LocalDate.now();
-
-        //If max_date is greater than actual date, it means there is time to pay
-        //So, the payment state is PENDING
-        if(max_date.isAfter(date_now) || max_date.isEqual(date_now)){
-            fee.setState("PENDING");
-            return 0;
-        //If max_date is lesser than actual date, it means the payment is late
-        //So, the payment state is NOT PAID
-        }else if(max_date.isBefore(date_now) && fee.getPayment_date().isEmpty()){
-            fee.setState("NOTPAID");
-            return date_now.until(max_date, ChronoUnit.MONTHS);
-        }else{
-            fee.setState("PAID");
-            return 0;
-        }
-    }
 }

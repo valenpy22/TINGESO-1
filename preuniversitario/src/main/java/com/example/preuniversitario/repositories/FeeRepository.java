@@ -6,14 +6,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface FeeRepository extends JpaRepository<FeeEntity, String> {
-    @Query(value = "SELECT * FROM fees WHERE fees.rut = :rut AND fees.payment_date =:payment_date LIMIT 1",
+    @Query(value = "SELECT * FROM fees WHERE fees.rut = :rut",
     nativeQuery = true)
-    FeeEntity searchFee(@Param("rut") String rut, @Param("payment_date") String payment_date);
-
-    @Query(value = "SELECT * FROM fees WHERE fees.rut = :rut", nativeQuery = true)
-    FeeEntity searchFees(@Param("rut") String rut);
-
+    List<FeeEntity> searchFees(@Param("rut") String rut);
 
 }

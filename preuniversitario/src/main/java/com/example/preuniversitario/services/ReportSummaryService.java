@@ -100,6 +100,7 @@ public class ReportSummaryService {
         return max_fees;
     }
 
+    /*
     public double calculateInterestByMonthsLate(int months_late, FeeEntity fee){
         double interest = 0;
         if(fee.getState().equals("PENDING")){
@@ -120,21 +121,67 @@ public class ReportSummaryService {
         return interest;
     }
 
-    public double calculateDiscountByAverageScore(UploadDataEntity uploadData, FeeEntity fee){
-        double discount = 0;
+     */
 
+    public void calculateDiscountByAverageScore(UploadDataEntity uploadData, FeeEntity fee){
         double average_score = this.uploadDataService.getAverageScoreByRutAndMonth(uploadData.getRut(), uploadData.getExam_date());
 
         if(average_score >= 950 && average_score <= 1000){
-            discount = fee.getPrice()*0.1;
+            fee.setPrice(fee.getPrice()*0.9);
         }else if(average_score >= 900 && average_score <= 949){
-            discount = fee.getPrice()*0.05;
+            fee.setPrice(fee.getPrice()*0.95);
         }else if(average_score >= 850 && average_score <= 899){
-            discount = fee.getPrice()*0.02;
+            fee.setPrice(fee.getPrice()*0.98);
         }
-
-        return discount;
     }
 
+    public int calculateMonthsLate(String rut){
+        List<FeeEntity> fees = feeService.findFees(rut);
 
+        int count = 0;
+        for(FeeEntity fee : fees){
+            if(isFeeLate(rut, fee)){
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public boolean isFeeLate(FeeEntity fee){
+        String max_date_payment = fee.getMax_date_payment();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        LocalDate max_date = LocalDate.parse(max_date_payment, formatter);
+        LocalDate date_now = LocalDate.now();
+
+        return fee.getPayment_date().isEmpty() && max_date.isBefore(date_now);
+    }
+
+    public void calculateInterestByMonthsLate(String rut){
+        int months_late = calculateMonthsLate(rut);
+        List<FeeEntity> fees = feeService.findFees(rut);
+
+        for(FeeEntity fee : fees){
+            if(isFeeLate(fee) && fee.getState().equals("PENDING")){
+                if(months_late > 3){
+                    fee.setPrice(fee.getPrice()*1.15);
+                }else if(months_late == 3){
+                    fee.setPrice(fee.getPrice()*1.09);
+                }else if(months_late == 2){
+                    fee.setPrice(fee.getPrice()*1.06);
+                }else if(months_late == 1){
+                    fee.setPrice(fee.getPrice()*1.03);
+                }
+            }
+        }
+    }
+
+    public double calculateAverageScore(String rut){
+        return uploadDataService.getAverageScoreByRut(rut);
+    }
+
+    public long calculateExams(String rut){
+        return uploadDataService.getNumberOfExamsByRut(rut);
+    }
 }

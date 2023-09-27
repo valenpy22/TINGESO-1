@@ -109,4 +109,12 @@ public class UploadDataService {
     public double getAverageScoreByRutAndMonth(String rut, String exam_date){
         return uploadDataRepository.getAverageScoreByRutAndMonth(rut, exam_date);
     }
+
+    public double getAverageScoreByRut(String rut){
+        return uploadDataRepository.getAverageScoreByRut(rut);
+    }
+
+    public long getNumberOfExamsByRut(String rut){
+        return uploadDataRepository.findExamsByRut(rut);
+    }
 }
