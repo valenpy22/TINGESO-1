@@ -29,7 +29,7 @@ public class UploadDataController {
     public String upload(@RequestParam("file")MultipartFile file, RedirectAttributes redirectAttributes){
         uploadDataService.save(file);
 
-        redirectAttributes.addFlashAttribute("message", "File uploaded succesfully");
+        redirectAttributes.addFlashAttribute("messageFUS", "File uploaded succesfully");
         uploadDataService.readCSV("data");
         return "redirect:/fileUpload";
     }
