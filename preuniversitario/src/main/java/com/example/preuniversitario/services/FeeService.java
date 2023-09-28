@@ -5,9 +5,6 @@ import com.example.preuniversitario.repositories.FeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 
@@ -38,11 +35,7 @@ public class FeeService {
     }
 
     public boolean isFeePaid(FeeEntity fee){
-        if(fee.getState().equals("PAID")){
-            return true;
-        }else{
-            return false;
-        }
+        return fee.getState().equals("PAID");
     }
 
     public boolean isFeeUpToDate(FeeEntity fee){
@@ -51,6 +44,41 @@ public class FeeService {
         }else{
             return true;
         }
+    }
+
+    public long getCountPaidFees(String rut){
+        return feeRepository.countPaidFeesByRut(rut);
+    }
+
+    public double getTotalAmountPaid(String rut){
+        List<FeeEntity> paid_fees = feeRepository.getPaidFeesByRut(rut);
+
+        double total_amount = 0;
+
+        for(FeeEntity fee : paid_fees){
+            total_amount = total_amount + fee.getPrice();
+        }
+
+        return total_amount;
+    }
+
+    public double getTotalAmountToPay(String rut){
+        List<FeeEntity> fees = feeRepository.searchFees(rut);
+        double to_pay = 0;
+
+        for(FeeEntity fee : fees){
+            if(!fee.getState().equals("PAID")){
+                to_pay = to_pay + fee.getPrice();
+            }
+        }
+
+        return to_pay;
+    }
+
+    public String getLastPayment(String rut){
+        FeeEntity fee = feeRepository.findByRutOrderByPaymentDateDesc(rut);
+
+        return fee.getPayment_date();
     }
 
 }

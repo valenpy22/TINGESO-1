@@ -117,4 +117,5 @@ public class UploadDataService {
     public long getNumberOfExamsByRut(String rut){
         return uploadDataRepository.findExamsByRut(rut);
     }
+
 }

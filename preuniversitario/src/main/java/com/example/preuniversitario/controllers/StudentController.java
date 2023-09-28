@@ -16,7 +16,7 @@ import java.util.ArrayList;
 @RequestMapping
 public class StudentController {
     @Autowired
-    StudentService studentService;
+    private StudentService studentService;
 
     @GetMapping("/students")
     public String listStudents(Model model){
@@ -40,7 +40,6 @@ public class StudentController {
                              @RequestParam("senior_year") int senior_year){
         studentService.saveStudent(rut, names, surnames, birthday, school_type, school_name, senior_year);
         return "redirect:/new-student";
-
     }
 
 }

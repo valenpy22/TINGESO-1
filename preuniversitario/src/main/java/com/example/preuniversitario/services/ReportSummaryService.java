@@ -5,16 +5,14 @@ import com.example.preuniversitario.entities.ReportSummaryEntity;
 import com.example.preuniversitario.entities.StudentEntity;
 import com.example.preuniversitario.entities.UploadDataEntity;
 import com.example.preuniversitario.repositories.ReportSummaryRepository;
-import com.example.preuniversitario.repositories.UploadDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -181,7 +179,15 @@ public class ReportSummaryService {
         return uploadDataService.getAverageScoreByRut(rut);
     }
 
-    public long calculateExams(String rut){
+    public long calculateNumberOfExams(String rut){
         return uploadDataService.getNumberOfExamsByRut(rut);
+    }
+
+    public long calculateNumberOfPaidFees(String rut){
+        return feeService.getCountPaidFees(rut);
+    }
+
+    public ArrayList<ReportSummaryEntity> getData(){
+        return (ArrayList<ReportSummaryEntity>) reportSummaryRepository.findAll();
     }
 }
