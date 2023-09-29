@@ -10,9 +10,11 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -189,5 +191,75 @@ public class ReportSummaryService {
 
     public ArrayList<ReportSummaryEntity> getData(){
         return (ArrayList<ReportSummaryEntity>) reportSummaryRepository.findAll();
+    }
+
+    public void generateFees(String rut, int number_of_fees){
+        StudentEntity student = studentService.findByRut(rut);
+        ReportSummaryEntity reportSummary = new ReportSummaryEntity();
+        reportSummary.setRut(student.getRut());
+        reportSummary.setNames(student.getNames());
+        reportSummary.setSurnames(student.getSurnames());
+
+        switch (student.getSchool_type()) {
+            case "Municipal" -> {
+                if(number_of_fees <= 10){
+                    reportSummary.setTotal_fees(number_of_fees);
+                }
+            }
+            case "Subvencionado" -> {
+                if(number_of_fees <= 7){
+                    reportSummary.setTotal_fees(number_of_fees);
+                }
+            }
+            case "Privado" -> {
+                if(number_of_fees <= 4){
+                    reportSummary.setTotal_fees(number_of_fees);
+                }
+            }
+        }
+        if(number_of_fees == 0){
+            reportSummary.setPayment_method("Contado");
+            reportSummary.setFinal_price(1500000*0.5);
+        }else{
+            reportSummary.setPayment_method("Cuotas");
+            reportSummary.setFinal_price(1500000);
+        }
+    }
+
+    public double calculateFinalPriceByDiscount(String rut){
+        StudentEntity student = studentService.findByRut(rut);
+        ReportSummaryEntity reportSummary = reportSummaryRepository.findByRut(rut);
+        if(reportSummary.getPayment_method().equals("Cuotas")){
+            double discount_school_type = calculateDiscountBySchoolType(student.getSchool_type());
+            double discount_senior_year = calculateDiscountBySeniorYear(student.getSenior_year());
+            double total_price = reportSummary.getFinal_price() - discount_senior_year - discount_school_type;
+            reportSummary.setFinal_price(total_price);
+            return total_price;
+        }else{
+            return 0.0;
+        }
+    }
+
+    public double calculateFeePriceByTotalPrice(String rut){
+        ReportSummaryEntity reportSummary = reportSummaryRepository.findByRut(rut);
+        double final_price = reportSummary.getFinal_price();
+        int number_of_fees = reportSummary.getTotal_fees();
+
+        double fee_price = final_price/number_of_fees;
+        Date date = new Date();
+        ZoneId timeZone = ZoneId.systemDefault();
+        int year = date.toInstant().atZone(timeZone).getYear();
+        int month = date.toInstant().atZone(timeZone).getMonthValue();
+        String local_date = Integer.toString(year);
+
+        for(int i = month; i < number_of_fees; i++){
+            FeeEntity fee = new FeeEntity();
+            fee.setRut(rut);
+            fee.setState("PENDING");
+            fee.setPrice(fee_price);
+            fee.setMax_date_payment("10/"+(i+1)+"/"+local_date);
+        }
+
+        return fee_price;
     }
 }

@@ -1,6 +1,8 @@
 package com.example.preuniversitario.services;
 
 import com.example.preuniversitario.entities.FeeEntity;
+import com.example.preuniversitario.entities.ReportSummaryEntity;
+import com.example.preuniversitario.entities.StudentEntity;
 import com.example.preuniversitario.repositories.FeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,9 @@ import java.util.Map;
 public class FeeService {
     @Autowired
     private FeeRepository feeRepository;
+
+    @Autowired
+    private StudentService studentService;
 
     public void saveFee(Map request){
         FeeEntity fee = new FeeEntity();
@@ -80,5 +85,4 @@ public class FeeService {
 
         return fee.getPayment_date();
     }
-
 }

@@ -22,7 +22,7 @@ public class UploadDataController {
 
     @GetMapping("/fileUpload")
     public String main(){
-        return "fileUpload";
+        return "file-upload";
     }
 
     @PostMapping("/fileUpload")
@@ -38,6 +38,6 @@ public class UploadDataController {
     public String listing(Model model){
         ArrayList<UploadDataEntity> datas = uploadDataService.getData();
         model.addAttribute("datas", datas);
-        return "fileInformation";
+        return "file-information";
     }
 }

@@ -16,12 +16,12 @@ public class FeeController {
     @Autowired
     private FeeService feeService;
 
-    @GetMapping("/uploadFee")
+    @GetMapping("/upload-fee")
     public String newFee(){
-        return "uploadFee";
+        return "upload-fee";
     }
 
-    @PostMapping("/saveFee")
+    @PostMapping("/save-fee")
     public String saveFee(@RequestParam Map<String, String> allParameters){
         feeService.saveFee(allParameters);
         return "redirect:/saveFee";

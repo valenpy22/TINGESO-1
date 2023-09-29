@@ -40,5 +40,4 @@ public class StudentService {
     public String getSchoolType(String rut){
         return studentRepository.findSchoolType(rut);
     }
-
 }
