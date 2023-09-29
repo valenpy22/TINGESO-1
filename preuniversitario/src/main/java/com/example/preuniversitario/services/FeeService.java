@@ -85,4 +85,8 @@ public class FeeService {
 
         return fee.getPayment_date();
     }
+
+    public List<FeeEntity> getAllFees(){
+        return feeRepository.findAll();
+    }
 }
