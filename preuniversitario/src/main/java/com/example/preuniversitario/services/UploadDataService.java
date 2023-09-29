@@ -114,7 +114,7 @@ public class UploadDataService {
         return uploadDataRepository.getAverageScoreByRut(rut);
     }
 
-    public long getNumberOfExamsByRut(String rut){
+    public int getNumberOfExamsByRut(String rut){
         return uploadDataRepository.findExamsByRut(rut);
     }
 

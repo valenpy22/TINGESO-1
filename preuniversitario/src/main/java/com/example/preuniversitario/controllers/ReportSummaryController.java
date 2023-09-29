@@ -34,7 +34,7 @@ public class ReportSummaryController {
     }
     @PostMapping("/generate-fees")
     public String generateFee(@RequestParam("rut") String rut, @RequestParam("number_of_fees") int number_of_fees){
-        reportSummaryService.generateFees(rut, number_of_fees);
+        reportSummaryService.calculateSheet(rut, number_of_fees);
         return "redirect:/generate-fees";
     }
 }
