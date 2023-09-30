@@ -4,11 +4,11 @@ import com.example.preuniversitario.entities.FeeEntity;
 import com.example.preuniversitario.entities.ReportSummaryEntity;
 import com.example.preuniversitario.entities.StudentEntity;
 import com.example.preuniversitario.entities.UploadDataEntity;
+import com.example.preuniversitario.repositories.FeeRepository;
 import com.example.preuniversitario.repositories.ReportSummaryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -20,34 +20,73 @@ import java.util.List;
 @Service
 public class ReportSummaryService {
     @Autowired
-    private ReportSummaryRepository reportSummaryRepository;
+    ReportSummaryRepository reportSummaryRepository;
 
     @Autowired
-    private UploadDataService uploadDataService;
+    UploadDataService uploadDataService;
 
     @Autowired
-    private StudentService studentService;
+    StudentService studentService;
 
     @Autowired
-    private FeeService feeService;
+    FeeRepository feeRepository;
 
-    public void getReportSummary() {
+    @Autowired
+    FeeService feeService;
+
+    public ArrayList<ReportSummaryEntity> getReportsSummary() {
         reportSummaryRepository.deleteAll();
         List<String> listRuts = uploadDataService.getRuts();
+
         for(String rut : listRuts){
-            calculateSheet(rut);
+            reportSummaryRepository.save(calculateSheet(rut));
+        }
+
+        return (ArrayList<ReportSummaryEntity>) reportSummaryRepository.findAll();
+    }
+
+    public ReportSummaryEntity calculateSheet(String rut){
+        ReportSummaryEntity reportSummary = reportSummaryRepository.findByRut(rut);
+
+        return reportSummary;
+    }
+
+    public void setPaymentMethodAndFinalPrice(String rut, String number_of_fees, ReportSummaryEntity reportSummary){
+        if(number_of_fees.equals("0")){
+            reportSummary.setPayment_method("Contado");
+            reportSummary.setFinal_price(1500000*0.5);
+        }else{
+            reportSummary.setPayment_method("Cuotas");
+            reportSummary.setFinal_price(1500000);
         }
     }
 
-    public void calculateSheet(String rut){
-        ReportSummaryEntity reportSummary = generateFees(rut, 10);
-        reportSummary.setExam_number(uploadDataService.getNumberOfExamsByRut(rut));
-        reportSummary.setAverage_score(uploadDataService.getAverageScoreByRut(rut));
-        reportSummary.setFinal_price(calculateTotalPriceByFees(rut));
-        reportSummary.setTotal_paid(calculateTotalPaid(rut));
-        reportSummary.setLast_payment(feeService.getLastPayment(rut));
-        reportSummary.setDebt(calculateTotalDebt(rut));
-        reportSummary.setLate_fees(calculateMonthsLate(rut));
+    public void setMaxFees(String rut, String fees, ReportSummaryEntity reportSummary){
+        StudentEntity student = studentService.findByRut(rut);
+
+        int number_of_fees = Integer.parseInt(fees);
+        switch (student.getSchool_type()) {
+            case "Municipal" -> {
+                reportSummary.setTotal_fees(Math.min(number_of_fees, 10));
+            }
+            case "Subvencionado" -> {
+                reportSummary.setTotal_fees(Math.min(number_of_fees, 7));
+            }
+            case "Privado" -> {
+                reportSummary.setTotal_fees(Math.min(number_of_fees, 4));
+            }
+        }
+    }
+
+    public void calculateFinalPriceByDiscount(String rut, ReportSummaryEntity reportSummary){
+        StudentEntity student = studentService.findByRut(rut);
+        if(reportSummary.getPayment_method().equals("Cuotas")){
+            double discount_school_type = calculateDiscountBySchoolType(student.getSchool_type());
+            double discount_senior_year = calculateDiscountBySeniorYear(student.getSenior_year());
+            double total_price = reportSummary.getFinal_price() - discount_senior_year - discount_school_type;
+            reportSummary.setFinal_price(total_price);
+        }
+        reportSummaryRepository.save(reportSummary);
     }
 
     public double calculateDiscountBySchoolType(String school_type){
@@ -62,7 +101,9 @@ public class ReportSummaryService {
 
     public double calculateDiscountBySeniorYear(int senior_year){
 
-        LocalDate dBefore = LocalDate.parse("31/12/" + Integer.toString(senior_year), DateTimeFormatter.ISO_DATE);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        LocalDate dBefore = LocalDate.parse("31/12/" + senior_year, formatter);
         LocalDate dAfter = LocalDate.now();
 
         long diff = dBefore.until(dAfter, ChronoUnit.YEARS);
@@ -78,19 +119,50 @@ public class ReportSummaryService {
         }
 
         return total_discount;
-
     }
 
-    public int calculateMaxFee(String school_type){
-        int max_fees = 4;
+    public double getFeePrice(String rut, ReportSummaryEntity reportSummary){
+        double final_price = reportSummary.getFinal_price();
+        int real_number_of_fees = reportSummary.getTotal_fees();
+        return final_price/real_number_of_fees;
+    }
 
-        if(school_type.equals("Municipal")){
-            max_fees = 10;
-        }else if(school_type.equals("Subvencionado")){
-            max_fees = 7;
+    public int getMonth(){
+        Date date = new Date();
+        ZoneId timeZone = ZoneId.systemDefault();
+
+        return date.toInstant().atZone(timeZone).getMonthValue();
+    }
+
+    public int getYear(){
+        Date date = new Date();
+        ZoneId timeZone = ZoneId.systemDefault();
+
+        return date.toInstant().atZone(timeZone).getYear();
+    }
+
+    public void generateFees(String rut, String number_of_fees){
+        StudentEntity student = studentService.findByRut(rut);
+        ReportSummaryEntity reportSummary = new ReportSummaryEntity();
+        reportSummary.setRut(student.getRut());
+        reportSummary.setNames(student.getNames());
+        reportSummary.setSurnames(student.getSurnames());
+
+        setPaymentMethodAndFinalPrice(rut, number_of_fees, reportSummary);
+        setMaxFees(rut, number_of_fees, reportSummary);
+        calculateFinalPriceByDiscount(rut, reportSummary);
+        reportSummaryRepository.save(reportSummary);
+
+        int number_fees = reportSummary.getTotal_fees();
+        double fee_price = getFeePrice(rut, reportSummary);
+        int month = getMonth();
+        String local_date = Integer.toString(getYear());
+
+        for(int i = month; i < number_fees+month; i++){
+            feeService.saveFee(rut, "PENDING", fee_price, "10/"+(i+1)+"/"+local_date);
         }
 
-        return max_fees;
+        reportSummaryRepository.save(reportSummary);
     }
 
     public void calculateDiscountByAverageScore(UploadDataEntity uploadData, FeeEntity fee){
@@ -161,77 +233,6 @@ public class ReportSummaryService {
 
     public ArrayList<ReportSummaryEntity> getData(){
         return (ArrayList<ReportSummaryEntity>) reportSummaryRepository.findAll();
-    }
-
-    public ReportSummaryEntity generateFees(String rut, int number_of_fees){
-        StudentEntity student = studentService.findByRut(rut);
-        ReportSummaryEntity reportSummary = new ReportSummaryEntity();
-        reportSummary.setRut(student.getRut());
-        reportSummary.setNames(student.getNames());
-        reportSummary.setSurnames(student.getSurnames());
-
-        switch (student.getSchool_type()) {
-            case "Municipal" -> {
-                if(number_of_fees <= 10){
-                    reportSummary.setTotal_fees(number_of_fees);
-                }
-            }
-            case "Subvencionado" -> {
-                if(number_of_fees <= 7){
-                    reportSummary.setTotal_fees(number_of_fees);
-                }
-            }
-            case "Privado" -> {
-                if(number_of_fees <= 4){
-                    reportSummary.setTotal_fees(number_of_fees);
-                }
-            }
-        }
-        if(number_of_fees == 0){
-            reportSummary.setPayment_method("Contado");
-            reportSummary.setFinal_price(1500000*0.5);
-        }else{
-            reportSummary.setPayment_method("Cuotas");
-            reportSummary.setFinal_price(1500000);
-        }
-        return reportSummary;
-    }
-
-    public double calculateFinalPriceByDiscount(String rut){
-        StudentEntity student = studentService.findByRut(rut);
-        ReportSummaryEntity reportSummary = reportSummaryRepository.findByRut(rut);
-        if(reportSummary.getPayment_method().equals("Cuotas")){
-            double discount_school_type = calculateDiscountBySchoolType(student.getSchool_type());
-            double discount_senior_year = calculateDiscountBySeniorYear(student.getSenior_year());
-            double total_price = reportSummary.getFinal_price() - discount_senior_year - discount_school_type;
-            reportSummary.setFinal_price(total_price);
-            return total_price;
-        }else{
-            return 0.0;
-        }
-    }
-
-    public double calculateFeePriceByTotalPrice(String rut){
-        ReportSummaryEntity reportSummary = reportSummaryRepository.findByRut(rut);
-        double final_price = reportSummary.getFinal_price();
-        int number_of_fees = reportSummary.getTotal_fees();
-
-        double fee_price = final_price/number_of_fees;
-        Date date = new Date();
-        ZoneId timeZone = ZoneId.systemDefault();
-        int year = date.toInstant().atZone(timeZone).getYear();
-        int month = date.toInstant().atZone(timeZone).getMonthValue();
-        String local_date = Integer.toString(year);
-
-        for(int i = month; i < number_of_fees; i++){
-            FeeEntity fee = new FeeEntity();
-            fee.setRut(rut);
-            fee.setState("PENDING");
-            fee.setPrice(fee_price);
-            fee.setMax_date_payment("10/"+(i+1)+"/"+local_date);
-        }
-
-        return fee_price;
     }
 
     public double calculateTotalPriceByFees(String rut){

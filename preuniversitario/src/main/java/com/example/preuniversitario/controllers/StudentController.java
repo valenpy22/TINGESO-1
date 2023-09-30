@@ -39,6 +39,7 @@ public class StudentController {
                              @RequestParam("school_name") String school_name,
                              @RequestParam("senior_year") int senior_year){
         studentService.saveStudent(rut, names, surnames, birthday, school_type, school_name, senior_year);
+
         return "redirect:/new-student";
     }
 

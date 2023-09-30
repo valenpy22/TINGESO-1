@@ -13,6 +13,9 @@ import lombok.NoArgsConstructor;
 public class FeeEntity {
     @Id
     @Column(nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    @Column(nullable = false)
     private String rut;
     private String max_date_payment;
     private String state;

@@ -20,12 +20,12 @@ public class UploadDataController {
     @Autowired
     private UploadDataService uploadDataService;
 
-    @GetMapping("/fileUpload")
+    @GetMapping("/file-upload")
     public String main(){
         return "file-upload";
     }
 
-    @PostMapping("/fileUpload")
+    @PostMapping("/file-upload")
     public String upload(@RequestParam("file")MultipartFile file, RedirectAttributes redirectAttributes){
         uploadDataService.save(file);
 
@@ -34,7 +34,7 @@ public class UploadDataController {
         return "redirect:/fileUpload";
     }
 
-    @GetMapping("/fileInformation")
+    @GetMapping("/file-information")
     public String listing(Model model){
         ArrayList<UploadDataEntity> datas = uploadDataService.getData();
         model.addAttribute("datas", datas);

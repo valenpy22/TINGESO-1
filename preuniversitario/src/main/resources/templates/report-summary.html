@@ -4,7 +4,7 @@
       xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <title>Listado de cuotas</title>
+    <title>Reportes resumen</title>
     <meta charset="UTF-8">
     <link rel="stylesheet"
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
@@ -109,37 +109,41 @@
     <a class="btn" href="/"><button>Volver al menú principal</button></a>
 </header>
 <div align = "center" class = "container my-2">
-
-    <h1><b>Listado de cuotas</b></h1>
-    <form action="/search-fees" method="get">
-        <label for="rut"><strong>Rut</strong></label>
-        <input type="text" id="rut" placeholder="Ingrese el rut del estudiante" name="rut">
-        <button type="submit">Buscar</button>
-    </form>
+    <h1><b>Reportes resumen</b></h1>
     <table border = "1" class = "content-table">
         <thead>
         <tr>
             <th style = "color:white">Rut</th>
-            <th style = "color:white">Estado</th>
-            <th style = "color:white">Precio</th>
-            <th style = "color:white">Día pagado</th>
-            <th style = "color:white">Máximo día a pagar</th>
-            <th style = "color:white">Acción</th>
+            <th style = "color:white">Nombres</th>
+            <th style = "color:white">Apellidos</th>
+            <th style = "color:white">N° de exámenes</th>
+            <th style = "color:white">Puntaje promedio</th>
+            <th style = "color:white">Monto total arancel</th>
+            <th style = "color:white">Tipo Pago</th>
+            <th style = "color:white">N° cuotas</th>
+            <th style = "color:white">N° cuotas pagadas</th>
+            <th style = "color:white">Monto pagado</th>
+            <th style = "color:white">Último pago</th>
+            <th style = "color:white">Saldo por pagar</th>
+            <th style = "color:white">N° cuotas atrasadas</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="fee:${fees}">
-            <td th:text="${fee.rut}"></td>
-            <td th:text="${fee.state}"></td>
-            <td th:text="${fee.price}"></td>
-            <td th:text="${fee.payment_date}"></td>
-            <td th:text="${fee.max_date_payment}"></td>
-            <td>
-                <form action="/pay-fee" method="post">
-                    <input type="hidden" name="feeId" th:value="${fee.id}" />
-                    <button type="submit">Pagar</button>
-                </form>
-            </td>
+        <tr th:each="report:${reportSummary}">
+            <td th:text="${report.rut}"></td>
+            <td th:text="${report.names}"></td>
+            <td th:text="${report.surnames}"></td>
+            <td th:text="${report.exam_number}"></td>
+            <td th:text="${report.average_score}"></td>
+            <td th:text="${report.final_price}"></td>
+            <td th:text="${report.payment_method}"></td>
+            <td th:text="${report.total_fees}"></td>
+            <td th:text="${report.paid_fees}"></td>
+            <td th:text="${report.total_paid}"></td>
+            <td th:text="${report.last_payment}"></td>
+            <td th:text="${report.debt}"></td>
+            <td th:text="${report.late_fees}"></td>
+
         </tr>
         </tbody>
     </table>

@@ -1,6 +1,7 @@
 package com.example.preuniversitario.controllers;
 
 import com.example.preuniversitario.entities.ReportSummaryEntity;
+import com.example.preuniversitario.services.FeeService;
 import com.example.preuniversitario.services.ReportSummaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,29 +13,34 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping
 public class ReportSummaryController {
     @Autowired
-    private ReportSummaryService reportSummaryService;
+    ReportSummaryService reportSummaryService;
 
-    @GetMapping("/reportSummary")
-    public String listReportSummary(Model model) throws ParseException {
-        reportSummaryService.getReportSummary();
+    @Autowired
+    FeeService feeService;
 
-        ArrayList<ReportSummaryEntity> reportSummary = reportSummaryService.getData();
+    @GetMapping("/report-summary")
+    public String listReportSummary(Model model){
+        ArrayList<ReportSummaryEntity> reportSummary = reportSummaryService.getReportsSummary();
+
+        //ArrayList<ReportSummaryEntity> reportSummary = reportSummaryService.getData();
         model.addAttribute("reportSummary", reportSummary);
-        return "reportSummary";
+        return "report-summary";
     }
 
     @GetMapping("/generate-fees")
     public String fees(){
         return "generate-fees";
     }
+
     @PostMapping("/generate-fees")
-    public String generateFee(@RequestParam("rut") String rut, @RequestParam("number_of_fees") int number_of_fees){
-        reportSummaryService.calculateSheet(rut, number_of_fees);
+    public String generateFee(@RequestParam("rut") String rut, @RequestParam("number_of_fees") String number_of_fees){
+        reportSummaryService.generateFees(rut, number_of_fees);
         return "redirect:/generate-fees";
     }
 }

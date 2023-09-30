@@ -1,10 +1,15 @@
 package com.example.preuniversitario.services;
 
 import com.example.preuniversitario.entities.FeeEntity;
+import com.example.preuniversitario.entities.ReportSummaryEntity;
 import com.example.preuniversitario.repositories.FeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -12,22 +17,19 @@ import java.util.Map;
 @Service
 public class FeeService {
     @Autowired
-    private FeeRepository feeRepository;
+    FeeRepository feeRepository;
 
-    @Autowired
-    private StudentService studentService;
-
-    public void saveFee(Map request){
-        FeeEntity fee = new FeeEntity();
-        fee.setRut(request.get("rut").toString());
-        fee.setState(request.get("state").toString());
-        fee.setPayment_date(request.get("payment_date").toString());
-        fee.setMax_date_payment(request.get("max_date_payment").toString());
-        this.feeRepository.save(fee);
+    public void saveFee(String rut, String state, double price, String max_date_payment){
+        FeeEntity feeEntity = new FeeEntity();
+        feeEntity.setRut(rut);
+        feeEntity.setState(state);
+        feeEntity.setPrice(price);
+        feeEntity.setMax_date_payment(max_date_payment);
+        feeRepository.save(feeEntity);
     }
 
-    public List<FeeEntity> findFees(String rut){
-        return this.feeRepository.searchFees(rut);
+    public ArrayList<FeeEntity> findFees(String rut){
+        return (ArrayList<FeeEntity>) feeRepository.searchFees(rut);
     }
 
     public void deleteFee(FeeEntity fee){
@@ -85,7 +87,23 @@ public class FeeService {
         return fee.getPayment_date();
     }
 
-    public List<FeeEntity> getAllFees(){
-        return feeRepository.findAll();
+    public ArrayList<FeeEntity> getAllFees(){
+        return (ArrayList<FeeEntity>) feeRepository.findAll();
+    }
+
+    public FeeEntity getFeeById(Long feeId) {
+        return feeRepository.findById(feeId);
+    }
+
+    public void payFee(Long feeId){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        String date_now = LocalDate.now().format(formatter);
+
+        FeeEntity fee = feeRepository.findById(feeId);
+        fee.setPayment_date(date_now);
+        fee.setState("PAID");
+
+        feeRepository.save(fee);
     }
 }

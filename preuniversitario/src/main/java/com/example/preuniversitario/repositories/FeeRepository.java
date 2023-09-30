@@ -10,6 +10,7 @@ import java.util.List;
 
 @Repository
 public interface FeeRepository extends JpaRepository<FeeEntity, String> {
+    FeeEntity findById(@Param("id") Long id);
     @Query(value = "SELECT * FROM fees WHERE fees.rut = :rut",
     nativeQuery = true)
     List<FeeEntity> searchFees(@Param("rut") String rut);
