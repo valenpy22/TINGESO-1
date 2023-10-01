@@ -1,9 +1,6 @@
 package com.example.preuniversitario.services;
 
-import com.example.preuniversitario.entities.FeeEntity;
-import com.example.preuniversitario.entities.ReportSummaryEntity;
-import com.example.preuniversitario.entities.StudentEntity;
-import com.example.preuniversitario.entities.UploadDataEntity;
+import com.example.preuniversitario.entities.*;
 import com.example.preuniversitario.repositories.FeeRepository;
 import com.example.preuniversitario.repositories.ReportSummaryRepository;
 import org.jetbrains.annotations.NotNull;
@@ -33,7 +30,6 @@ public class ReportSummaryService {
     FeeService feeService;
 
     public ArrayList<ReportSummaryEntity> getReportsSummary() {
-        //reportSummaryRepository.deleteAll();
         List<String> listRuts = uploadDataService.getRuts();
 
         for(String rut : listRuts){
@@ -289,5 +285,24 @@ public class ReportSummaryService {
             }
         }
         return total_debt;
+    }
+
+    public ReportSummaryEntity findByRut(String rut){
+        return reportSummaryRepository.findByRut(rut);
+    }
+
+    public double getInterestByMonthsLate(String rut){
+        int months_late = calculateMonthsLate(rut);
+        if(months_late > 3){
+            return 0.15;
+        }else if(months_late == 3){
+            return 0.09;
+        }else if(months_late == 2){
+            return 0.06;
+        }else if(months_late == 1){
+            return 0.03;
+        }else{
+            return 0;
+        }
     }
 }
