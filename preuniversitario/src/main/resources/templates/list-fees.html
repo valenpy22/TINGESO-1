@@ -120,6 +120,7 @@
         <thead>
         <tr>
             <th style = "color:white">Rut</th>
+            <th style = "color:white">N° de cuota</th>
             <th style = "color:white">Estado</th>
             <th style = "color:white">Precio</th>
             <th style = "color:white">Día pagado</th>
@@ -130,6 +131,7 @@
         <tbody>
         <tr th:each="fee:${fees}">
             <td th:text="${fee.rut}"></td>
+            <td th:text="${fee.number_of_fee}"></td>
             <td th:text="${fee.state}"></td>
             <td th:text="${fee.price}"></td>
             <td th:text="${fee.payment_date}"></td>

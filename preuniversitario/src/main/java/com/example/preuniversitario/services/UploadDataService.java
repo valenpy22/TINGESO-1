@@ -118,4 +118,8 @@ public class UploadDataService {
         return uploadDataRepository.getNumberOfExamsByRut(rut);
     }
 
+    public String getLastExamDate(String rut){
+        return uploadDataRepository.findByExam_dateOrderByExam_dateDesc(rut);
+    }
+
 }

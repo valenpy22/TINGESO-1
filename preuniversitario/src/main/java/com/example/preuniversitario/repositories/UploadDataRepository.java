@@ -27,4 +27,7 @@ public interface UploadDataRepository extends JpaRepository<UploadDataEntity, In
 
     @Query(value = "SELECT AVG(data.score) AS average_score FROM data WHERE data.rut = :rut AND data.exam_date = :exam_date GROUP BY data.rut, YEAR(exam_date), MONTH(exam_date)", nativeQuery = true)
     double getAverageScoreByRutAndMonth(@Param("rut") String rut, @Param("exam_date") String exam_date);
+
+    @Query(value = "SELECT data.exam_date FROM data WHERE data.rut = :rut ORDER BY data.exam_date DESC LIMIT 1", nativeQuery = true)
+    String findByExam_dateOrderByExam_dateDesc(@Param("rut") String rut);
 }

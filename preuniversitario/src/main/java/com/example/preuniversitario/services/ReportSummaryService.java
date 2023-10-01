@@ -44,11 +44,17 @@ public class ReportSummaryService {
         reportSummary.setExam_number(calculateNumberOfExams(rut));
         reportSummary.setAverage_score(calculateAverageScore(rut));
         reportSummary.setFinal_price(calculateTotalPriceByFees(rut));
-        reportSummary.setPaid_fees(calculateNumberOfPaidFees(rut));
-        reportSummary.setTotal_paid(calculateTotalPaid(rut));
-        reportSummary.setLast_payment(feeService.getLastPayment(rut));
-        reportSummary.setDebt(calculateTotalDebt(rut));
+        if(areAnyFeesPaid(rut)){
+            reportSummary.setPaid_fees(calculateNumberOfPaidFees(rut));
+            reportSummary.setTotal_paid(calculateTotalPaid(rut));
+            reportSummary.setLast_payment(feeService.getLastPayment(rut));
+        }else{
+            reportSummary.setPaid_fees(0);
+            reportSummary.setTotal_paid(0);
+            reportSummary.setLast_payment("");
+        }
         reportSummary.setLate_fees(calculateMonthsLate(rut));
+        reportSummary.setDebt(calculateTotalDebt(rut));
         reportSummaryRepository.save(reportSummary);
     }
 
@@ -170,23 +176,42 @@ public class ReportSummaryService {
         double fee_price = getFeePrice(rut);
         int month = getMonth();
 
+        int fee_count = 1;
         for (int i = month; i < number_fees + month; i++) {
-            int currentMonth = (i % 12) + 1;  // Calcula el mes actual (1-12)
-            int currentYear = getYear() + (i / 12);  // Calcula el año actual
+            int currentMonth = (i % 12) + 1;  // It gets the current month (1-12)
+            int currentYear = getYear() + (i / 12);  // It gets the current year
 
             if(currentMonth < 10){
-                feeService.saveFee(rut, "PENDING", fee_price, "10/0" + currentMonth + "/" + currentYear);
+                feeService.saveFee(rut, "PENDING", fee_price, "10/0" + currentMonth + "/" + currentYear, fee_count);
             }else{
-                feeService.saveFee(rut, "PENDING", fee_price, "10/" + currentMonth + "/" + currentYear);
+                feeService.saveFee(rut, "PENDING", fee_price, "10/" + currentMonth + "/" + currentYear, fee_count);
             }
-
+            fee_count++;
         }
     }
 
-    public void calculateDiscountByAverageScore(String rut){
-        //Conseguir el último mes de cuando el estudiante dió las pruebas,
-        //calcular el promedio de pruebas de ese mes y aplicar descuento
-        //en los meses pendientes de pago.
+    public double calculateDiscountByAverageScore(String rut){
+        String last_date = uploadDataService.getLastExamDate(rut);
+        double average_score = uploadDataService.getAverageScoreByRutAndMonth(rut, last_date);
+        ArrayList<FeeEntity> fees = feeService.findFees(rut);
+
+        double discount = 0;
+        for(FeeEntity fee : fees){
+            if(fee.getState().equals("PENDING")){
+                if(average_score >= 950 && average_score <= 1000){
+                    fee.setPrice(fee.getPrice()*0.9);
+                    discount = fee.getPrice()*0.1;
+                }else if(average_score >= 900 && average_score < 950){
+                    fee.setPrice(fee.getPrice()*0.95);
+                    discount = fee.getPrice()*0.05;
+                }else if(average_score >= 850 && average_score < 900){
+                    fee.setPrice(fee.getPrice()*0.98);
+                    discount = fee.getPrice()*0.02;
+                }
+                feeService.save(fee);
+            }
+        }
+        return discount;
     }
 
     public int calculateMonthsLate(String rut){
@@ -221,24 +246,30 @@ public class ReportSummaryService {
         }
     }
 
-    public void calculateInterestByMonthsLate(String rut){
+    public double calculateInterestByMonthsLate(String rut){
         int months_late = calculateMonthsLate(rut);
         List<FeeEntity> fees = feeService.findFees(rut);
+        double interest = 0;
 
         for(FeeEntity fee : fees){
             if(isFeeLate(fee) && fee.getState().equals("PENDING")){
                 if(months_late > 3){
+                    interest = fee.getPrice()*0.15;
                     fee.setPrice(fee.getPrice()*1.15);
                 }else if(months_late == 3){
+                    interest = fee.getPrice()*0.09;
                     fee.setPrice(fee.getPrice()*1.09);
                 }else if(months_late == 2){
+                    interest = fee.getPrice()*0.06;
                     fee.setPrice(fee.getPrice()*1.06);
                 }else if(months_late == 1){
+                    interest = fee.getPrice()*0.03;
                     fee.setPrice(fee.getPrice()*1.03);
                 }
             }
             feeService.save(fee);
         }
+        return interest;
     }
 
     public double calculateAverageScore(String rut){
@@ -283,18 +314,14 @@ public class ReportSummaryService {
         return reportSummaryRepository.findByRut(rut);
     }
 
-    public double getInterestByMonthsLate(String rut){
-        int months_late = calculateMonthsLate(rut);
-        if(months_late > 3){
-            return 0.15;
-        }else if(months_late == 3){
-            return 0.09;
-        }else if(months_late == 2){
-            return 0.06;
-        }else if(months_late == 1){
-            return 0.03;
-        }else{
-            return 0;
+    public boolean areAnyFeesPaid(String rut){
+        ArrayList<FeeEntity> fees = feeService.findFees(rut);
+
+        for(FeeEntity fee : fees){
+            if(fee.getState().equals("PAID")){
+                return true;
+            }
         }
+        return false;
     }
 }

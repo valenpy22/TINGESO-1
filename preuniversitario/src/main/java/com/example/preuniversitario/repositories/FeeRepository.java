@@ -26,6 +26,7 @@ public interface FeeRepository extends JpaRepository<FeeEntity, String> {
     @Query(value = "SELECT * FROM fees WHERE fees.rut = :rut AND fees.state = 'PAID' ORDER BY fees.payment_date DESC LIMIT 1", nativeQuery = true)
     FeeEntity getFeeByRutOrderByPaymentDateDesc(String rut);
 
-
+    @Query(value = "SELECT * FROM fees WHERE fees.rut = :rut AND fees.number_of_fee = :number_of_fee", nativeQuery = true)
+    FeeEntity findByRutAndNumber_of_fee(@Param("rut") String rut, @Param("number_of_fee") int number_of_fee);
 
 }

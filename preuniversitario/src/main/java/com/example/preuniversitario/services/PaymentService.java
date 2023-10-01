@@ -36,15 +36,15 @@ public class PaymentService {
 
             double discount_school_type = reportSummaryService.calculateDiscountBySchoolType(student.getSchool_type());
             double discount_senior_year = reportSummaryService.calculateDiscountBySeniorYear(student.getSenior_year());
-            //double discount_average_score = reportSummaryService.calculateDiscountByAverageScore(uploadDataService.)
-            double interest_months_late = reportSummaryService.getInterestByMonthsLate(rut);
+            double discount_average_score = reportSummaryService.calculateDiscountByAverageScore(rut);
+            double interest_months_late = reportSummaryService.calculateInterestByMonthsLate(rut);
             double total_price = reportSummaryService.calculateTotalPriceByFees(rut);
 
             PaymentEntity payment = new PaymentEntity();
             payment.setRut(rut);
             payment.setDiscount_school_type(discount_school_type);
             payment.setDiscount_senior_year(discount_senior_year);
-            //payment.setDiscount_average_score(discount_average_score);
+            payment.setDiscount_average_score(discount_average_score);
             payment.setInterest_months_late(interest_months_late);
             payment.setTotal_price(total_price);
             paymentRepository.save(payment);

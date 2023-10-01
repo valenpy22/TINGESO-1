@@ -19,13 +19,21 @@ public class FeeService {
     @Autowired
     FeeRepository feeRepository;
 
-    public void saveFee(String rut, String state, double price, String max_date_payment){
+    public void saveFee(String rut, String state, double price, String max_date_payment, int fee_count){
         FeeEntity feeEntity = new FeeEntity();
         feeEntity.setRut(rut);
         feeEntity.setState(state);
         feeEntity.setPrice(price);
         feeEntity.setMax_date_payment(max_date_payment);
+        feeEntity.setNumber_of_fee(fee_count);
         feeRepository.save(feeEntity);
+    }
+
+    public void saveFee(String rut, int number_of_fee, String payment_date){
+        FeeEntity fee = feeRepository.findByRutAndNumber_of_fee(rut, number_of_fee);
+        fee.setState("PAID");
+        fee.setPayment_date(payment_date);
+        feeRepository.save(fee);
     }
 
     public void save(FeeEntity fee){

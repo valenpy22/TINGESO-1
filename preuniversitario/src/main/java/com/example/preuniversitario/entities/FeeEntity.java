@@ -21,4 +21,5 @@ public class FeeEntity {
     private String state;
     private String payment_date;
     private double price;
+    private int number_of_fee;
 }

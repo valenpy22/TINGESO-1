@@ -59,4 +59,17 @@ public class FeeController {
         return "list-fees";
     }
 
+    @GetMapping("/register-payments")
+    public String payment(){
+        return "register-payments";
+    }
+    @PostMapping("/register-payments")
+    public String payFeeDifferentDate(@RequestParam("rut") String rut,
+                                      @RequestParam("number_of_fee") int number_of_fee,
+                                      @RequestParam("payment_date") String payment_date){
+        feeService.saveFee(rut, number_of_fee, payment_date);
+
+        return "register-payments";
+    }
+
 }
