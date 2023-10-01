@@ -183,18 +183,10 @@ public class ReportSummaryService {
         }
     }
 
-    public double calculateDiscountByAverageScore(UploadDataEntity uploadData, FeeEntity fee){
-        double average_score = uploadDataService.getAverageScoreByRutAndMonth(uploadData.getRut(), uploadData.getExam_date());
-
-        if(average_score >= 950 && average_score <= 1000){
-            return fee.getPrice()*0.1;
-        }else if(average_score >= 900 && average_score <= 949){
-            return fee.getPrice()*0.05;
-        }else if(average_score >= 850 && average_score <= 899){
-            return fee.getPrice()*0.02;
-        }else{
-            return 0;
-        }
+    public void calculateDiscountByAverageScore(String rut){
+        //Conseguir el último mes de cuando el estudiante dió las pruebas,
+        //calcular el promedio de pruebas de ese mes y aplicar descuento
+        //en los meses pendientes de pago.
     }
 
     public int calculateMonthsLate(String rut){
