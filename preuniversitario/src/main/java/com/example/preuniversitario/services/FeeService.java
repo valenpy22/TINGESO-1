@@ -28,8 +28,12 @@ public class FeeService {
         feeRepository.save(feeEntity);
     }
 
+    public void save(FeeEntity fee){
+        feeRepository.save(fee);
+    }
+
     public ArrayList<FeeEntity> findFees(String rut){
-        return (ArrayList<FeeEntity>) feeRepository.searchFees(rut);
+        return (ArrayList<FeeEntity>) feeRepository.filterFeesByRut(rut);
     }
 
     public void deleteFee(FeeEntity fee){
@@ -40,19 +44,7 @@ public class FeeService {
         this.feeRepository.deleteAll();
     }
 
-    public boolean isFeePaid(FeeEntity fee){
-        return fee.getState().equals("PAID");
-    }
-
-    public boolean isFeeUpToDate(FeeEntity fee){
-        if(!isFeePaid(fee)){
-            return !fee.getState().equals("NOTPAID");
-        }else{
-            return true;
-        }
-    }
-
-    public long getCountPaidFees(String rut){
+    public int getCountPaidFees(String rut){
         return feeRepository.countPaidFeesByRut(rut);
     }
 
@@ -68,21 +60,8 @@ public class FeeService {
         return total_amount;
     }
 
-    public double getTotalAmountToPay(String rut){
-        List<FeeEntity> fees = feeRepository.searchFees(rut);
-        double to_pay = 0;
-
-        for(FeeEntity fee : fees){
-            if(!fee.getState().equals("PAID")){
-                to_pay = to_pay + fee.getPrice();
-            }
-        }
-
-        return to_pay;
-    }
-
     public String getLastPayment(String rut){
-        FeeEntity fee = feeRepository.findByRutOrderByPaymentDateDesc(rut);
+        FeeEntity fee = feeRepository.getFeeByRutOrderByPaymentDateDesc(rut);
 
         return fee.getPayment_date();
     }
@@ -106,4 +85,5 @@ public class FeeService {
 
         feeRepository.save(fee);
     }
+
 }

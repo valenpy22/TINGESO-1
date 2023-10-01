@@ -27,8 +27,6 @@ public class ReportSummaryController {
     @GetMapping("/report-summary")
     public String listReportSummary(Model model){
         ArrayList<ReportSummaryEntity> reportSummary = reportSummaryService.getReportsSummary();
-
-        //ArrayList<ReportSummaryEntity> reportSummary = reportSummaryService.getData();
         model.addAttribute("reportSummary", reportSummary);
         return "report-summary";
     }

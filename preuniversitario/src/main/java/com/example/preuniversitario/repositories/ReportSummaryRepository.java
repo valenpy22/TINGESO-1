@@ -8,8 +8,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ReportSummaryRepository extends JpaRepository<ReportSummaryEntity, String> {
-    public ReportSummaryEntity findByRut(String rut);
-
-    @Query(value = "INSERT INTO payment_summary(rut) values(?)", nativeQuery = true)
-    void insertData(@Param("rut") String rut);
+    @Query(value = "SELECT * FROM reports WHERE reports.rut = :rut", nativeQuery = true)
+    ReportSummaryEntity findByRut(@Param("rut") String rut);
 }

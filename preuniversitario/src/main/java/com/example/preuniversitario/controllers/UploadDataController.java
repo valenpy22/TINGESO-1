@@ -26,12 +26,12 @@ public class UploadDataController {
     }
 
     @PostMapping("/file-upload")
-    public String upload(@RequestParam("file")MultipartFile file, RedirectAttributes redirectAttributes){
+    public String upload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes){
         uploadDataService.save(file);
 
         redirectAttributes.addFlashAttribute("messageFUS", "File uploaded succesfully");
-        uploadDataService.readCSV("data");
-        return "redirect:/fileUpload";
+        uploadDataService.readCSV("students_exams.csv");
+        return "redirect:/file-upload";
     }
 
     @GetMapping("/file-information")

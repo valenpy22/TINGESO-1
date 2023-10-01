@@ -17,6 +17,7 @@ import java.time.ZoneId;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 public class ReportSummaryTest {
@@ -59,30 +60,9 @@ public class ReportSummaryTest {
         reportSummary.setFinal_price(1500000);
         reportSummaryRepository.save(reportSummary);
 
-        double final_price = reportSummary.getFinal_price();
-        int number_of_fees = reportSummary.getTotal_fees();
 
-        double fee_price = final_price/number_of_fees;
-        Date date = new Date();
-        ZoneId timeZone = ZoneId.systemDefault();
-        int year = date.toInstant().atZone(timeZone).getYear();
-        int month = date.toInstant().atZone(timeZone).getMonthValue();
-        String local_date = Integer.toString(year);
-
-        for(int i = month; i < number_of_fees; i++){
-            FeeEntity fee = new FeeEntity();
-            fee.setRut(reportSummary.getRut());
-            fee.setState("PENDING");
-            fee.setPrice(fee_price);
-            fee.setMax_date_payment("10/"+(i+1)+"/"+local_date);
-            feeRepository.save(fee);
-        }
-
-        String rut = "21305689-1";
-
-        for(FeeEntity fee : feeService.getAllFees()){
-            System.out.println(fee.getPrice());
-        }
+        assertNotNull(reportSummaryRepository.findByRut("21305689-1"));
+        reportSummaryRepository.deleteAll();
 
     }
 }

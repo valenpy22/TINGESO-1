@@ -14,6 +14,9 @@ import java.util.Date;
 @Data
 public class UploadDataEntity {
     @Id
+    @Column(unique = true, nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @Column(nullable = false)
     private String rut;
     private String exam_date;

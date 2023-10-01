@@ -97,14 +97,14 @@
     <nav>
     </nav>
     <a class="btn" href="/"><button>Volver al menú principal</button></a>
-    <a class="btn-2" href="/fileInformation"><button>Ver el último Data.txt cargado</button></a>
+    <a class="btn-2" href="/file-information"><button>Ver el último Data.txt cargado</button></a>
 </header>
 <div class = "f">
     <div class="container">
         <h1><b>Cargar el archivo de datos</b></h1>
-        <form th:action="@{/fileUpload}" method="POST" enctype="multipart/form-data">
+        <form th:action="@{/file-upload}" method="POST" enctype="multipart/form-data">
             <br>
-            <input type="file" class="form-control" name="file" accept = ".txt">
+            <input type="file" class="form-control" name="file" accept = ".csv">
             <br>
             <input class = "btn btn-primary"
                    type="submit" value="Cargar el archivo a la Base de Datos">

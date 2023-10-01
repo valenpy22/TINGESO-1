@@ -37,7 +37,4 @@ public class StudentService {
         return studentRepository.findByRut(rut);
     }
 
-    public String getSchoolType(String rut){
-        return studentRepository.findSchoolType(rut);
-    }
 }

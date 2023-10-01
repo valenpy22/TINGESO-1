@@ -102,8 +102,8 @@ public class UploadDataService {
         saveData(new_data);
     }
 
-    public List<String> getRuts(){
-        return uploadDataRepository.findDistinctRut();
+    public ArrayList<String> getRuts(){
+        return (ArrayList<String>) uploadDataRepository.getRuts();
     }
 
     public double getAverageScoreByRutAndMonth(String rut, String exam_date){
@@ -115,7 +115,7 @@ public class UploadDataService {
     }
 
     public int getNumberOfExamsByRut(String rut){
-        return uploadDataRepository.findExamsByRut(rut);
+        return uploadDataRepository.getNumberOfExamsByRut(rut);
     }
 
 }
