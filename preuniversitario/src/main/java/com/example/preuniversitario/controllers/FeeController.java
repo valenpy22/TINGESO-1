@@ -1,7 +1,9 @@
 package com.example.preuniversitario.controllers;
 
 import com.example.preuniversitario.entities.FeeEntity;
+import com.example.preuniversitario.entities.PaymentEntity;
 import com.example.preuniversitario.services.FeeService;
+import com.example.preuniversitario.services.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +20,9 @@ import java.util.List;
 public class FeeController {
     @Autowired
     FeeService feeService;
+
+    @Autowired
+    PaymentService paymentService;
 
     @GetMapping("/upload-fee")
     public String newFee(){

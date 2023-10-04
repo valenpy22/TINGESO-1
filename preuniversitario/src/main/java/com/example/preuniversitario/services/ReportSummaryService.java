@@ -43,6 +43,9 @@ public class ReportSummaryService {
         ReportSummaryEntity reportSummary = reportSummaryRepository.findByRut(rut);
         reportSummary.setExam_number(calculateNumberOfExams(rut));
         reportSummary.setAverage_score(calculateAverageScore(rut));
+        reportSummary.setFinal_price(calculateFinalPriceByDiscount(rut));
+        //double a = calculateDiscountByAverageScore(rut);
+        //double b = calculateInterestByMonthsLate(rut);
         reportSummary.setFinal_price(calculateTotalPriceByFees(rut));
         if(areAnyFeesPaid(rut)){
             reportSummary.setPaid_fees(calculateNumberOfPaidFees(rut));
@@ -166,9 +169,11 @@ public class ReportSummaryService {
         reportSummary.setNames(student.getNames());
         reportSummary.setSurnames(student.getSurnames());
         reportSummary.setPayment_method(getPaymentMethod(number_of_fees));
+
         reportSummaryRepository.save(reportSummary);
         reportSummary.setFinal_price(getFinalPrice(number_of_fees));
         reportSummary.setFinal_price(calculateFinalPriceByDiscount(rut));
+
         reportSummary.setTotal_fees(getTotalFees(rut, number_of_fees));
         reportSummaryRepository.save(reportSummary);
 

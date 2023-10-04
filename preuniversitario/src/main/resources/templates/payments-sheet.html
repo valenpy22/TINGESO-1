@@ -109,29 +109,34 @@
     <a class="btn" href="/"><button>Volver al menú principal</button></a>
 </header>
 <div align = "center" class = "container my-2">
-    <h1><b>Planilla de pagos</b></h1>
-    <table border = "1" class = "content-table">
-        <thead>
-        <tr>
-            <th style = "color:white">Rut</th>
-            <th style = "color:white">Descuento tipo colegio</th>
-            <th style = "color:white">Descuento años de egreso</th>
-            <th style = "color:white">Descuento promedio de notas</th>
-            <th style = "color:white">Interés meses de atraso</th>
-            <th style = "color:white">Monto total arancel</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="payment:${payments}">
-            <td th:text="${payment.rut}"></td>
-            <td th:text="${payment.discount_school_type}"></td>
-            <td th:text="${payment.discount_senior_year}"></td>
-            <td th:text="${payment.discount_average_score}"></td>
-            <td th:text="${payment.interest_months_late}"></td>
-            <td th:text="${payment.total_price}"></td>
-        </tr>
-        </tbody>
-    </table>
+    <h1><b>Calcular planilla</b></h1>
+    <form method="post" action="/payments-sheet">
+        <table border="1" class="content-table">
+            <thead>
+            <tr>
+                <th style="color:white">Rut</th>
+                <th style="color:white">Descuento tipo colegio</th>
+                <th style="color:white">Descuento años de egreso</th>
+                <th style="color:white">Descuento promedio de notas</th>
+                <th style="color:white">Interés meses de atraso</th>
+                <th style="color:white">Monto total arancel</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="payment:${payments}">
+                <td th:text="${payment.rut}"></td>
+                <td th:text="${payment.discount_school_type}"></td>
+                <td th:text="${payment.discount_senior_year}"></td>
+                <td th:text="${payment.discount_average_score}"></td>
+                <td th:text="${payment.interest_months_late}"></td>
+                <td th:text="${payment.total_price}"></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- Agregamos un botón dentro del formulario -->
+        <button type="submit" class="btn" style="margin-top: 20px;">Calcular Planilla</button>
+    </form>
 </div>
 </body>
 </html>

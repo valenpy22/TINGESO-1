@@ -1,0 +1,26 @@
+version: "3.8"
+services:
+  mysql-db:
+    image: mysql
+    restart: always
+    volumes:
+      - ./data/db:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: Tingeso2023#
+      MYSQL_DATABASE: bdtemp
+    ports:
+      - 33061:3306
+  app:
+    container_name: tingeso_entrega_1
+    image: valenpy22/tingeso_entrega_1
+    ports:
+      - "8091:8091"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/bdtemp?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=Tingeso2023#
+    deploy:
+      restart_policy:
+        condition: on-failure
+    depends_on:
+      - mysql-db

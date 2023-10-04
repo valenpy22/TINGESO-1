@@ -4,6 +4,7 @@ import com.example.preuniversitario.entities.FeeEntity;
 import com.example.preuniversitario.entities.ReportSummaryEntity;
 import com.example.preuniversitario.repositories.FeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -30,10 +31,31 @@ public class FeeService {
     }
 
     public void saveFee(String rut, int number_of_fee, String payment_date){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        String date_now = LocalDate.now().format(formatter);
+        int month = LocalDate.now().getMonthValue();
+        int year = LocalDate.now().getYear();
+        LocalDate max_date;
+        LocalDate min_date;
+
+        if(month < 10){
+            max_date = LocalDate.parse("10/0"+month+"/"+year, formatter);
+            min_date = LocalDate.parse("04/0"+month+"/"+year, formatter);
+        }else{
+            max_date = LocalDate.parse("10/"+month+"/"+year, formatter);
+            min_date = LocalDate.parse("04/"+month+"/"+year, formatter);
+        }
+
+        LocalDate datenow = LocalDate.parse(date_now, formatter);
         FeeEntity fee = feeRepository.findByRutAndNumber_of_fee(rut, number_of_fee);
-        fee.setState("PAID");
-        fee.setPayment_date(payment_date);
-        feeRepository.save(fee);
+
+        if(datenow.isBefore(max_date) && datenow.isAfter(min_date)){
+            fee.setState("PAID");
+            fee.setPayment_date(payment_date);
+            feeRepository.save(fee);
+        }else{
+            fee.setState("PENDING");
+        }
     }
 
     public void save(FeeEntity fee){
@@ -84,13 +106,29 @@ public class FeeService {
 
     public void payFee(Long feeId){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
         String date_now = LocalDate.now().format(formatter);
+        int month = LocalDate.now().getMonthValue();
+        int year = LocalDate.now().getYear();
+        LocalDate max_date;
+        LocalDate min_date;
 
+        if(month < 10){
+            max_date = LocalDate.parse("11/0"+month+"/"+year, formatter);
+            min_date = LocalDate.parse("04/0"+month+"/"+year, formatter);
+        }else{
+            max_date = LocalDate.parse("11/"+month+"/"+year, formatter);
+            min_date = LocalDate.parse("04/"+month+"/"+year, formatter);
+        }
+
+        LocalDate datenow = LocalDate.parse(date_now, formatter);
         FeeEntity fee = feeRepository.findById(feeId);
-        fee.setPayment_date(date_now);
-        fee.setState("PAID");
 
+        if(datenow.isBefore(max_date) && datenow.isAfter(min_date)){
+            fee.setState("PAID");
+            fee.setPayment_date(date_now);
+        }else{
+            fee.setState("PENDING");
+        }
         feeRepository.save(fee);
     }
 

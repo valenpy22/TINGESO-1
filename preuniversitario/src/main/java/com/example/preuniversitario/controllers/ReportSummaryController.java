@@ -2,6 +2,7 @@ package com.example.preuniversitario.controllers;
 
 import com.example.preuniversitario.entities.ReportSummaryEntity;
 import com.example.preuniversitario.services.FeeService;
+import com.example.preuniversitario.services.PaymentService;
 import com.example.preuniversitario.services.ReportSummaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,6 +24,9 @@ public class ReportSummaryController {
 
     @Autowired
     FeeService feeService;
+
+    @Autowired
+    PaymentService paymentService;
 
     @GetMapping("/report-summary")
     public String listReportSummary(Model model){
