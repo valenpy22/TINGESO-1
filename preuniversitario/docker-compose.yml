@@ -11,6 +11,7 @@ services:
     depends_on:
       - app1
       - app2
+      - app3
   mysql-db:
     image: mysql
     restart: always
@@ -36,6 +37,20 @@ services:
     depends_on:
       - mysql-db
   app2:
+    container_name: tingeso_entrega_2
+    image: valenpy22/tingeso_entrega_1
+    ports:
+      - "8092:8091"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/bdtemp?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=Tingeso2023#
+    deploy:
+      restart_policy:
+        condition: on-failure
+    depends_on:
+      - mysql-db
+  app3:
     container_name: tingeso_entrega_2
     image: valenpy22/tingeso_entrega_1
     ports:
