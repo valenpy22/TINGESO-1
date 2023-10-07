@@ -23,8 +23,8 @@ services:
     ports:
       - 33061:3306
   app1:
-    container_name: tingeso_entrega_1
-    image: valenpy22/tingeso_entrega_1
+    container_name: tingeso_1
+    image: valenpy22/tingeso_1
     ports:
       - "8091:8091"
     environment:
@@ -37,8 +37,8 @@ services:
     depends_on:
       - mysql-db
   app2:
-    container_name: tingeso_entrega_2
-    image: valenpy22/tingeso_entrega_1
+    container_name: tingeso_2
+    image: valenpy22/tingeso_1
     ports:
       - "8092:8091"
     environment:
@@ -51,8 +51,8 @@ services:
     depends_on:
       - mysql-db
   app3:
-    container_name: tingeso_entrega_3
-    image: valenpy22/tingeso_entrega_1
+    container_name: tingeso_3
+    image: valenpy22/tingeso_1
     ports:
       - "8093:8091"
     environment:
