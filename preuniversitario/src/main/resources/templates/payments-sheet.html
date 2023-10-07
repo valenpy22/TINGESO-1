@@ -14,13 +14,14 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
     <style>
-        *{
-            font-family: sans-serif;
+        * {
+            font-family: 'Arial, sans-serif';
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
-        .content-table{
+
+        .content-table {
             border-collapse: collapse;
             margin: 25px 0;
             font-size: 0.9em;
@@ -29,30 +30,37 @@
             overflow: hidden;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
         }
-        .content-table thead tr{
-            background-color: #009879;
+
+        .content-table thead tr {
+            background-color: #0074e4;
             color: #ffffff;
             text-align: left;
             font-weight: bold;
         }
+
         .content-table th,
-        .content-table td{
+        .content-table td {
             padding: 12px 15px;
         }
-        .content-table tbody tr{
+
+        .content-table tbody tr {
             border-bottom: 1px solid #dddddd;
         }
-        .content-table tbody tr:nth-of-type(even){
+
+        .content-table tbody tr:nth-of-type(even) {
             background-color: #f3f3f3;
         }
-        .content-table tbody tr:last-of-type{
-            border-bottom: 2px solid #009879;
+
+        .content-table tbody tr:last-of-type {
+            border-bottom: 2px solid #0074e4;
         }
-        .content-table tbody tr.active-row{
+
+        .content-table tbody tr.active-row {
             font-weight: bold;
-            color: #009879;
+            color: #0074e4;
         }
-        .header{
+
+        .header {
             background-color: #1b3039;
             display: flex;
             justify-content: flex-end;
@@ -60,13 +68,13 @@
             height: 85px;
             padding: 5px 10%;
         }
-        .header .logo{
+
+        .header .logo {
             margin-right: auto;
             color: white;
-            font-family: 'Pacifico',serif;
+            font-family: 'Pacifico', serif;
         }
         .header .btn button{
-            margin-left: 20px;
             font-weight: 700;
             color: #1b3039;
             padding: 9px 25px;
@@ -77,22 +85,6 @@
             transition: all 0.3s ease 0s;
         }
         .header .btn button:hover{
-            background-color: #e2f1f8;
-            color: #ffbc0e;
-            transform: scale(1.1);
-        }
-        .header .btn-2 button {
-            margin-left: 20px;
-            font-weight: 700;
-            color: #1b3039;
-            padding: 9px 25px;
-            background: #eceff1;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s ease 0s;
-        }
-        .header .btn-2 button:hover{
             background-color: #e2f1f8;
             color: #ffbc0e;
             transform: scale(1.1);
@@ -108,18 +100,18 @@
     </nav>
     <a class="btn" href="/"><button>Volver al menú principal</button></a>
 </header>
-<div align = "center" class = "container my-2">
+<div class="container">
     <h1><b>Calcular planilla</b></h1>
     <form method="post" action="/payments-sheet">
-        <table border="1" class="content-table">
+        <table class="content-table">
             <thead>
             <tr>
-                <th style="color:white">Rut</th>
-                <th style="color:white">Descuento tipo colegio</th>
-                <th style="color:white">Descuento años de egreso</th>
-                <th style="color:white">Descuento promedio de notas</th>
-                <th style="color:white">Interés meses de atraso</th>
-                <th style="color:white">Monto total arancel</th>
+                <th>Rut</th>
+                <th>Descuento tipo colegio</th>
+                <th>Descuento años de egreso</th>
+                <th>Descuento promedio de notas</th>
+                <th>Interés meses de atraso</th>
+                <th>Monto total arancel</th>
             </tr>
             </thead>
             <tbody>

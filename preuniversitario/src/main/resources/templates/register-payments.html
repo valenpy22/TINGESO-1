@@ -10,54 +10,57 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
     <style>
-        .mainclass{
-            margin-top: 20px;
-            display: flex;
-            justify-content: center;
+        body {
             font-family: Roboto, Arial, sans-serif;
             font-size: 15px;
+            background-color: #f5f5f5;
+        }
+
+        .main-container{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .form-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            max-width: 400px;
+            width: 100%;
         }
         form {
-            border: 6px solid #f1f1f1;
-        }
-        input[type=text], input[type=password] {
-            width: 100%;
-            padding: 16px 8px;
-            margin: 8px 0;
-            display: inline-block;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
-        }
-        button {
-            background-color: #42bfbb;
-            color: white;
-            padding: 14px 0;
-            margin: 10px 0;
-            border: none;
-            cursor: grabbing;
-            width: 100%;
+            text-align: left;
         }
         h1 {
-            text-align:center;
+            font-family: 'Pacifico', cursive;
+            color: white;
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        button {
+            background-color: #0074e4;
+            color: #fff;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
         }
         button:hover {
-            opacity: 0.8;
+            background-color: #0056b3;
         }
-        .formcontainer {
-            text-align: left;
-            margin: 24px 50px 12px;
-        }
-        .container {
-            padding: 16px 0;
-            text-align:left;
-        }
-        span.psw {
-            float: right;
-            padding-top: 0;
-            padding-right: 15px;
-        }
-        /* Change styles for span on extra small screens */
-        .header{
+        .header {
             background-color: #1b3039;
             display: flex;
             justify-content: flex-end;
@@ -65,13 +68,14 @@
             height: 85px;
             padding: 5px 10%;
         }
-        .header .logo{
+
+        .header .logo {
             margin-right: auto;
             color: white;
-            font-family: 'Pacifico',serif;
+            font-family: 'Pacifico', serif;
         }
+
         .header .btn button{
-            margin-left: 20px;
             font-weight: 700;
             color: #1b3039;
             padding: 9px 25px;
@@ -97,25 +101,21 @@
     </nav>
     <a class="btn" href="/"><button>Volver al menú principal</button></a>
 </header>
-<div class = "mainclass">
-    <form  th:action="@{/register-payments}" method="POST">
-        <h1><b>Registrar pago de cuota</b></h1>
-        <div class="formcontainer">
-            <hr/>
-            <div class="container">
-                <label><strong>Rut</strong></label>
-                <input type="text" id = "rut"
-                       placeholder="Ingrese el rut del estudiante" name="rut" required>
-                <label><strong>Número de cuota</strong></label>
-                <input type="text" id = "number_of_fee"
-                       placeholder="Ingrese el número de cuota a pagar" name="number_of_fee" required>
-                <label><strong>Fecha de cuota</strong></label>
-                <input type="text" id = "payment_date"
-                       placeholder="Ingrese la fecha de la cuota pagada" name="payment_date" required>
-            </div>
+<div class="main-container">
+    <div class="form-container">
+        <form th:action="@{/register-payments}" method="POST">
+            <h1 style="color:  #000000; font-family: 'Arial', sans-serif" ><b>Registrar pago de cuota</b></h1>
+            <label for="rut">Rut del estudiante:</label>
+            <input type="text" id="rut" placeholder="Ingrese el rut del estudiante" name="rut" required>
+
+            <label for="number_of_fee">Número de cuota a pagar:</label>
+            <input type="text" id="number_of_fee" placeholder="Ingrese el número de cuota a pagar" name="number_of_fee" required>
+
+            <label for="payment_date">Fecha de la cuota pagada:</label>
+            <input type="text" id="payment_date" placeholder="Ingrese la fecha de la cuota pagada" name="payment_date" required>
             <button type="submit">Pagar cuota</button>
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
 </body>
 </html>
