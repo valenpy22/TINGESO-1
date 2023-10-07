@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -86,7 +88,7 @@ public class FeeTest {
 
         feeService.save(fee);
         feeService.deleteFee(fee);
-        assertNull(feeService.getAllFees());
+        assertEquals(new ArrayList<>(), feeService.getAllFees());
     }
 
     @Test
@@ -100,7 +102,7 @@ public class FeeTest {
 
         feeService.save(fee);
         feeService.deleteFees();
-        assertNull(feeService.getAllFees());
+        assertEquals(new ArrayList<>(), feeService.getAllFees());
     }
 
     @Test
@@ -154,9 +156,9 @@ public class FeeTest {
         fee1.setPayment_date("07/10/2023");
 
         fee2.setRut("21305689-1");
-        fee2.setState("NOTPAID");
+        fee2.setState("PAID");
         fee2.setPrice(15000);
-        fee2.setMax_date_payment("10/10/2023");
+        fee2.setMax_date_payment("10/11/2023");
         fee2.setNumber_of_fee(2);
         fee2.setPayment_date("07/11/2023");
 
@@ -214,7 +216,7 @@ public class FeeTest {
         fee1.setPayment_date("07/10/2023");
         fee1.setId(123);
     }
-    
+
      */
 
 }
