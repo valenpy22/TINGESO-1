@@ -51,10 +51,10 @@ services:
     depends_on:
       - mysql-db
   app3:
-    container_name: tingeso_entrega_2
+    container_name: tingeso_entrega_3
     image: valenpy22/tingeso_entrega_1
     ports:
-      - "8092:8091"
+      - "8093:8091"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/bdtemp?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
       - SPRING_DATASOURCE_USERNAME=root
