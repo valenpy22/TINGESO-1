@@ -59,7 +59,10 @@ public class ReportSummaryTest {
         reportSummaryRepository.save(reportSummary);
 
         assertNotEquals(new ArrayList<>(), reportSummaryService.getReportsSummary());
-        reportSummaryRepository.delete(reportSummary);
+        reportSummaryRepository.deleteAll();
+        feeRepository.deleteAll();
+        studentRepository.deleteAll();
+        uploadDataRepository.deleteAll();
     }
 
     @Test
@@ -106,13 +109,25 @@ public class ReportSummaryTest {
         reportSummary.setFinal_price(30000);
         reportSummaryRepository.save(reportSummary);
 
+        UploadDataEntity uploadData = new UploadDataEntity();
+        UploadDataEntity uploadData1 = new UploadDataEntity();
+        uploadData.setRut(student.getRut());
+        uploadData.setScore("1000");
+        uploadData.setExam_date("05/06/2023");
+        uploadData1.setRut(student.getRut());
+        uploadData1.setScore("999");
+        uploadData1.setScore("05/06/2023");
+        uploadDataRepository.save(uploadData1);
+        uploadDataRepository.save(uploadData);
+
         reportSummaryService.calculateSheet(student.getRut());
         assertEquals(30000, reportSummary.getFinal_price());
         assertEquals(20000, reportSummary.getTotal_paid());
         assertEquals(10000, reportSummary.getDebt());
-        studentRepository.deleteAll();
         reportSummaryRepository.deleteAll();
         feeRepository.deleteAll();
+        studentRepository.deleteAll();
+        uploadDataRepository.deleteAll();
     }
 
     @Test
@@ -129,8 +144,10 @@ public class ReportSummaryTest {
         reportSummaryRepository.save(reportSummary);
 
         assertEquals("Contado", reportSummaryService.getPaymentMethod("0"));
-        reportSummaryRepository.delete(reportSummary);
+        reportSummaryRepository.deleteAll();
+        feeRepository.deleteAll();
         studentRepository.deleteAll();
+        uploadDataRepository.deleteAll();
     }
 
     @Test
@@ -148,7 +165,10 @@ public class ReportSummaryTest {
         reportSummaryRepository.save(reportSummary);
 
         assertEquals(750000, reportSummaryService.getFinalPrice("0"));
-        reportSummaryRepository.delete(reportSummary);
+        reportSummaryRepository.deleteAll();
+        feeRepository.deleteAll();
+        studentRepository.deleteAll();
+        uploadDataRepository.deleteAll();
 
     }
 
@@ -171,8 +191,10 @@ public class ReportSummaryTest {
         reportSummaryRepository.save(reportSummary);
 
         assertEquals(4, reportSummaryService.getTotalFees(reportSummary.getRut(), "9"));
-        reportSummaryRepository.delete(reportSummary);
+        reportSummaryRepository.deleteAll();
+        feeRepository.deleteAll();
         studentRepository.deleteAll();
+        uploadDataRepository.deleteAll();
     }
 
     @Test
@@ -204,7 +226,10 @@ public class ReportSummaryTest {
         reportSummaryRepository.save(reportSummary);
 
         assertEquals(1140000, reportSummaryService.calculateFinalPriceByDiscount(reportSummary.getRut()));
-        reportSummaryRepository.delete(reportSummary);
+        reportSummaryRepository.deleteAll();
+        feeRepository.deleteAll();
+        studentRepository.deleteAll();
+        uploadDataRepository.deleteAll();
     }
 
     @Test
@@ -229,8 +254,10 @@ public class ReportSummaryTest {
         reportSummaryRepository.save(reportSummary);
 
         assertEquals(300000, reportSummaryService.calculateDiscountBySchoolType(student.getSchool_type()));
-        studentRepository.delete(student);
-        reportSummaryRepository.delete(reportSummary);
+        reportSummaryRepository.deleteAll();
+        feeRepository.deleteAll();
+        studentRepository.deleteAll();
+        uploadDataRepository.deleteAll();
     }
 
     @Test
@@ -256,8 +283,10 @@ public class ReportSummaryTest {
 
         System.out.println(reportSummaryService.calculateDiscountBySeniorYear(student.getSenior_year()));
         assertEquals(60000, reportSummaryService.calculateDiscountBySeniorYear(student.getSenior_year()));
-        studentRepository.delete(student);
-        reportSummaryRepository.delete(reportSummary);
+        reportSummaryRepository.deleteAll();
+        feeRepository.deleteAll();
+        studentRepository.deleteAll();
+        uploadDataRepository.deleteAll();
     }
 
     @Test
@@ -280,23 +309,30 @@ public class ReportSummaryTest {
         studentRepository.save(student);
 
         assertEquals(10000, reportSummaryService.getFeePrice(student.getRut()));
-        feeRepository.deleteAll();
         reportSummaryRepository.deleteAll();
+        feeRepository.deleteAll();
         studentRepository.deleteAll();
+        uploadDataRepository.deleteAll();
     }
 
     @Test
     void getMonthTest(){
         ReportSummaryEntity reportSummary = new ReportSummaryEntity();
         assertEquals(10, reportSummaryService.getMonth());
-        reportSummaryRepository.delete(reportSummary);
+        reportSummaryRepository.deleteAll();
+        feeRepository.deleteAll();
+        studentRepository.deleteAll();
+        uploadDataRepository.deleteAll();
     }
 
     @Test
     void getYearTest(){
         ReportSummaryEntity reportSummary = new ReportSummaryEntity();
         assertEquals(2023, reportSummaryService.getYear());
-        reportSummaryRepository.delete(reportSummary);
+        reportSummaryRepository.deleteAll();
+        feeRepository.deleteAll();
+        studentRepository.deleteAll();
+        uploadDataRepository.deleteAll();
     }
 
     @Test
@@ -321,8 +357,10 @@ public class ReportSummaryTest {
         reportSummaryService.generateFees(student.getRut(), "10");
         assertEquals(10, reportSummaryService.findByRut("21305689-1").getTotal_fees());
         assertNotEquals(new ArrayList<>(), feeRepository.findAll());
-        studentRepository.delete(student);
-        reportSummaryRepository.delete(reportSummary);
+        reportSummaryRepository.deleteAll();
+        feeRepository.deleteAll();
+        studentRepository.deleteAll();
+        uploadDataRepository.deleteAll();
     }
 
     @Test
@@ -390,7 +428,10 @@ public class ReportSummaryTest {
         feeRepository.save(fee);
 
         assertEquals(1, reportSummaryService.calculateMonthsLate(fee.getRut()));
-        feeRepository.delete(fee);
+        reportSummaryRepository.deleteAll();
+        feeRepository.deleteAll();
+        studentRepository.deleteAll();
+        uploadDataRepository.deleteAll();
     }
 
     @Test
@@ -402,7 +443,10 @@ public class ReportSummaryTest {
         feeRepository.save(fee);
 
         assertTrue(reportSummaryService.isFeeLate(fee));
-        feeRepository.delete(fee);
+        reportSummaryRepository.deleteAll();
+        feeRepository.deleteAll();
+        studentRepository.deleteAll();
+        uploadDataRepository.deleteAll();
     }
 
     @Test
@@ -426,8 +470,10 @@ public class ReportSummaryTest {
         reportSummaryRepository.save(reportSummary);
 
         assertEquals(3, reportSummaryService.calculateInterestByMonthsLate(fee.getRut()));
-        feeRepository.delete(fee);
-        reportSummaryRepository.delete(reportSummary);
+        reportSummaryRepository.deleteAll();
+        feeRepository.deleteAll();
+        studentRepository.deleteAll();
+        uploadDataRepository.deleteAll();
     }
 
 
@@ -470,8 +516,10 @@ public class ReportSummaryTest {
         uploadDataRepository.save(uploadData2);
 
         assertEquals(75, reportSummaryService.calculateAverageScore(student.getRut()));
-        studentRepository.delete(student);
-        reportSummaryRepository.delete(reportSummary);
+        reportSummaryRepository.deleteAll();
+        feeRepository.deleteAll();
+        studentRepository.deleteAll();
+        uploadDataRepository.deleteAll();
     }
 
     @Test
@@ -505,8 +553,10 @@ public class ReportSummaryTest {
         reportSummaryRepository.save(reportSummary);
 
         assertEquals(2, reportSummaryService.calculateNumberOfPaidFees(fee1.getRut()));
+        reportSummaryRepository.deleteAll();
         feeRepository.deleteAll();
-        reportSummaryRepository.delete(reportSummary);
+        studentRepository.deleteAll();
+        uploadDataRepository.deleteAll();
     }
 
     @Test
@@ -537,8 +587,10 @@ public class ReportSummaryTest {
         reportSummaryRepository.save(reportSummary);
 
         assertNotEquals(new ArrayList<>(), reportSummaryService.getData());
-        studentRepository.delete(student);
-        reportSummaryRepository.delete(reportSummary);
+        reportSummaryRepository.deleteAll();
+        feeRepository.deleteAll();
+        studentRepository.deleteAll();
+        uploadDataRepository.deleteAll();
     }
 
     @Test
@@ -576,8 +628,10 @@ public class ReportSummaryTest {
         reportSummaryRepository.save(reportSummary);
 
         assertEquals(30000, reportSummaryService.calculateTotalPriceByFees(fee1.getRut()));
+        reportSummaryRepository.deleteAll();
         feeRepository.deleteAll();
-        reportSummaryRepository.delete(reportSummary);
+        studentRepository.deleteAll();
+        uploadDataRepository.deleteAll();
     }
 
     @Test
@@ -614,8 +668,10 @@ public class ReportSummaryTest {
         reportSummaryRepository.save(reportSummary);
 
         assertEquals(20000, reportSummaryService.calculateTotalPaid(fee1.getRut()));
+        reportSummaryRepository.deleteAll();
         feeRepository.deleteAll();
-        reportSummaryRepository.delete(reportSummary);
+        studentRepository.deleteAll();
+        uploadDataRepository.deleteAll();
     }
 
     @Test
@@ -656,8 +712,10 @@ public class ReportSummaryTest {
         reportSummaryRepository.save(reportSummary);
 
         assertEquals(10000, reportSummaryService.calculateTotalDebt(fee1.getRut()));
+        reportSummaryRepository.deleteAll();
         feeRepository.deleteAll();
-        reportSummaryRepository.delete(reportSummary);
+        studentRepository.deleteAll();
+        uploadDataRepository.deleteAll();
     }
 
     @Test
@@ -687,8 +745,10 @@ public class ReportSummaryTest {
         reportSummaryRepository.save(reportSummary);
 
         assertEquals(reportSummary, reportSummaryService.findByRut(student.getRut()));
-        studentRepository.delete(student);
-        reportSummaryRepository.delete(reportSummary);
+        reportSummaryRepository.deleteAll();
+        feeRepository.deleteAll();
+        studentRepository.deleteAll();
+        uploadDataRepository.deleteAll();
     }
 
     @Test
@@ -703,11 +763,11 @@ public class ReportSummaryTest {
         fee2.setState("PAID");
         feeRepository.save(fee1);
         feeRepository.save(fee2);
-        
-        ReportSummaryEntity reportSummary = new ReportSummaryEntity();
+
         assertTrue(reportSummaryService.areAnyFeesPaid(fee1.getRut()));
-        feeRepository.delete(fee1);
-        feeRepository.delete(fee2);
-        reportSummaryRepository.delete(reportSummary);
+        reportSummaryRepository.deleteAll();
+        feeRepository.deleteAll();
+        studentRepository.deleteAll();
+        uploadDataRepository.deleteAll();
     }
 }
