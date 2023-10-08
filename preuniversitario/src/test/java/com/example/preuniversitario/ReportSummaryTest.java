@@ -45,6 +45,122 @@ public class ReportSummaryTest {
     @Autowired
     UploadDataRepository uploadDataRepository;
 
+
+    @Test
+    void getFeePriceTest(){
+        ReportSummaryEntity reportSummary = new ReportSummaryEntity();
+        FeeEntity fee = new FeeEntity();
+        fee.setPrice(10000);
+        feeRepository.save(fee);
+
+        StudentEntity student = new StudentEntity();
+        student.setRut("21305689-1");
+        student.setNames("Juan");
+        student.setSurnames("Perez");
+        studentRepository.save(student);
+
+        assertEquals(10000, reportSummaryService.getFeePrice(student.getRut()));
+        reportSummaryRepository.delete(reportSummary);
+    }
+
+    @Test
+    void getMonthTest(){
+        ReportSummaryEntity reportSummary = new ReportSummaryEntity();
+        assertEquals(10, reportSummaryService.getMonth());
+        reportSummaryRepository.delete(reportSummary);
+    }
+
+    @Test
+    void getYearTest(){
+        ReportSummaryEntity reportSummary = new ReportSummaryEntity();
+        assertEquals(2023, reportSummaryService.getYear());
+        reportSummaryRepository.delete(reportSummary);
+    }
+
+    @Test
+    void generateFeesTest(){
+        StudentEntity student = new StudentEntity();
+
+        student.setRut("21305689-1");
+        student.setNames("Juan");
+        student.setSurnames("Perez");
+        student.setBirthday("01/01/2000");
+        student.setSchool_type("Municipal");
+        student.setSchool_name("Liceo A-1");
+        student.setSenior_year(2018);
+        studentService.saveStudent(student.getRut(), student.getNames(), student.getSurnames(),
+                student.getBirthday(), student.getSchool_type(), student.getSchool_name(),
+                student.getSenior_year());
+
+        ReportSummaryEntity reportSummary = new ReportSummaryEntity();
+        reportSummary.setRut(student.getRut());
+        reportSummary.setNames(student.getNames());
+        reportSummary.setSurnames(student.getSurnames());
+        reportSummary.setBirthday(student.getBirthday());
+        reportSummary.setSchool_type(student.getSchool_type());
+        reportSummary.setSchool_name(student.getSchool_name());
+        reportSummary.setSenior_year(student.getSenior_year());
+        reportSummary.setTotal_fees(0);
+        reportSummary.setPaid_fees(0);
+        reportSummary.setLate_fees(0);
+        reportSummary.setFinal_price(0);
+        reportSummary.setTotal_paid(0);
+        reportSummary.setDebt(0);
+        reportSummaryRepository.save(reportSummary);
+
+        reportSummaryService.generateFees(student.getRut());
+        assertNotEquals(new ArrayList<>(), feeService.getFees());
+        studentRepository.delete(student);
+        reportSummaryRepository.delete(reportSummary);
+    }
+
+    @Test
+    void calculateDiscountByAverageScoreTest(){
+        StudentEntity student = new StudentEntity();
+
+        student.setRut("21305689-1");
+        student.setNames("Juan");
+        student.setSurnames("Perez");
+        student.setBirthday("01/01/2000");
+        student.setSchool_type("Municipal");
+        student.setSchool_name("Liceo A-1");
+        student.setSenior_year(2018);
+        studentService.saveStudent(student.getRut(), student.getNames(), student.getSurnames(),
+                student.getBirthday(), student.getSchool_type(), student.getSchool_name(),
+                student.getSenior_year());
+
+        ReportSummaryEntity reportSummary = new ReportSummaryEntity();
+        reportSummary.setRut(student.getRut());
+        reportSummary.setNames(student.getNames());
+        reportSummary.setSurnames(student.getSurnames());
+        reportSummary.setBirthday(student.getBirthday());
+        reportSummary.setSchool_type(student.getSchool_type());
+        reportSummary.setSchool_name(student.getSchool_name());
+        reportSummary.setSenior_year(student.getSenior_year());
+        reportSummary.setTotal_fees(0);
+        reportSummary.setPaid_fees(0);
+        reportSummary.setLate_fees(0);
+        reportSummary.setFinal_price(0);
+        reportSummary.setTotal_paid(0);
+        reportSummary.setDebt(0);
+        reportSummaryRepository.save(reportSummary);
+
+        UploadDataEntity uploadData = new UploadDataEntity();
+        UploadDataEntity uploadData2 = new UploadDataEntity();
+        uploadData.setRut(student.getRut());
+        uploadData.setScore("100");
+        uploadData.setExam_date("01/01/2020");
+        uploadData2.setRut(student.getRut());
+        uploadData2.setScore("50");
+        uploadData2.setExam_date("10/01/2020");
+        uploadDataRepository.save(uploadData);
+        uploadDataRepository.save(uploadData2);
+    
+        assertEquals(0.1, reportSummaryService.calculateDiscountByAverageScore(student.getRut()));
+        studentRepository.delete(student);
+        reportSummaryRepository.delete(reportSummary);
+    }
+
     @Test
     void calculateMonthsLateTest(){
         FeeEntity fee = new FeeEntity();
