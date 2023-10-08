@@ -13,7 +13,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.lang.reflect.Array;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -39,30 +41,366 @@ public class ReportSummaryTest {
     @Autowired
     FeeService feeService;
 
-    @Test
-    void testGenerateFees(){
-        StudentEntity student = new StudentEntity();
-        ReportSummaryEntity reportSummary = new ReportSummaryEntity();
-        student.setRut("21305689-1");
-        student.setNames("Valentina Paz");
-        student.setSurnames("Campos Olguín");
-        student.setBirthday("22/05/2003");
-        student.setSchool_type("Subvencionado");
-        student.setSchool_name("Colegio Echaurren");
-        student.setSenior_year(2020);
-        studentRepository.save(student);
+    @Autowired
+    UploadDataRepository uploadDataRepository;
 
+    @Test
+    void calculateMonthsLateTest(){
+        FeeEntity fee = new FeeEntity();
+        fee.setRut("21305689-1");
+        fee.setMax_date_payment("06/07/2023");
+        fee.setState("NOTPAID");
+        feeRepository.save(fee);
+
+        assertEquals(1, reportSummaryService.calculateMonthsLate(fee.getRut()));
+        feeRepository.delete(fee);
+    }
+
+    @Test
+    void isFeeLateTest(){
+        FeeEntity fee = new FeeEntity();
+        fee.setRut("21305689-1");
+        fee.setMax_date_payment("06/07/2023");
+        fee.setState("NOTPAID");
+        feeRepository.save(fee);
+
+        assertEquals(true, reportSummaryService.isFeeLate(fee));
+        feeRepository.delete(fee);
+    }
+
+    /* 
+    @Test
+    void calculateInterestByMonthsLateTest(){
+        FeeEntity fee = new FeeEntity();
+        fee.setRut("21305689-1");
+        fee.setLast_payment("07/07/2023");
+        fee.setState("NOTPAID");
+        fee.setPrice(10000);
+        feeRepository.save(fee);
+
+        ReportSummaryEntity reportSummary = new ReportSummaryEntity();
+        reportSummary.setRut(fee.getRut());
+        reportSummary.setNames("Juan");
+        reportSummary.setSurnames("Perez");
+        reportSummary.setBirthday("01/01/2000");
+        reportSummary.setSchool_type("Municipal");
+        reportSummary.setSchool_name("Liceo A-1");
+        reportSummary.setSenior_year(2018);
+        reportSummary.setTotal_fees(3);
+        reportSummary.setTotal_paid_fees(2);
+        reportSummary.setTotal_unpaid_fees(1);
+        reportSummary.setTotal_fees_amount(30000);
+        reportSummary.setTotal_paid_fees_amount(20000);
+        reportSummary.setTotal_unpaid_fees_amount(10000);
+        reportSummaryRepository.save(reportSummary);
+
+        assertEquals(10000, reportSummaryService.calculateInterestByMonthsLate(fee.getRut()));
+        feeRepository.delete(fee);
+        reportSummaryRepository.delete(reportSummary);
+    }
+    */
+
+    @Test
+    void calculateAverageScoreTest(){
+        StudentEntity student = new StudentEntity();
+
+        student.setRut("21305689-1");
+        student.setNames("Juan");
+        student.setSurnames("Perez");
+        student.setBirthday("01/01/2000");
+        student.setSchool_type("Municipal");
+        student.setSchool_name("Liceo A-1");
+        student.setSenior_year(2018);
+        studentService.saveStudent(student.getRut(), student.getNames(), student.getSurnames(),
+                student.getBirthday(), student.getSchool_type(), student.getSchool_name(),
+                student.getSenior_year());
+
+        ReportSummaryEntity reportSummary = new ReportSummaryEntity();
         reportSummary.setRut(student.getRut());
         reportSummary.setNames(student.getNames());
         reportSummary.setSurnames(student.getSurnames());
-        reportSummary.setTotal_fees(7);
-        reportSummary.setPayment_method("Cuotas");
-        reportSummary.setFinal_price(1500000);
+        reportSummary.setBirthday(student.getBirthday());
+        reportSummary.setSchool_type(student.getSchool_type());
+        reportSummary.setSchool_name(student.getSchool_name());
+        reportSummary.setSenior_year(student.getSenior_year());
+        reportSummary.setTotal_fees(0);
+        reportSummary.setTotal_paid_fees(0);
+        reportSummary.setTotal_unpaid_fees(0);
+        reportSummary.setTotal_fees_amount(0);
+        reportSummary.setTotal_paid_fees_amount(0);
+        reportSummary.setTotal_unpaid_fees_amount(0);
         reportSummaryRepository.save(reportSummary);
 
+        UploadDataEntity uploadData = new UploadDataEntity();
+        UploadDataEntity uploadData2 = new UploadDataEntity();
+        uploadData.setRut(student.getRut());
+        uploadData.setScore(100);
+        uploadData.setExam_date("01/01/2020");
+        uploadData2.setRut(student.getRut());
+        uploadData2.setScore(50);
+        uploadData2.setExam_date("10/01/2020");
+        uploadDataRepository.save(uploadData);
+        uploadDataRepository.save(uploadData2);
 
-        assertNotNull(reportSummaryRepository.findByRut("21305689-1"));
-        reportSummaryRepository.deleteAll();
+        assertEquals(75, reportSummaryService.calculateAverageScore(student.getRut()));
+        studentRepository.delete(student);
+        reportSummaryRepository.delete(reportSummary);
+    }
 
+    @Test
+    void calculateNumberOfPaidFeesTest(){
+        FeeEntity fee1 = new FeeEntity();
+        FeeEntity fee2 = new FeeEntity();
+        FeeEntity fee3 = new FeeEntity();
+        fee1.setRut("21305689-1");
+        fee1.setLast_payment("07/07/2023");
+        fee1.setState("PAID");
+        fee2.setRut("21305689-1");
+        fee2.setLast_payment("07/07/2023");
+        fee2.setState("PAID");
+        fee3.setRut("21305689-1");
+        fee3.setLast_payment("07/07/2023");
+        fee3.setState("NOTPAID");
+        feeRepository.save(fee1);
+        feeRepository.save(fee2);
+
+        ReportSummaryEntity reportSummary = new ReportSummaryEntity();
+        reportSummary.setRut(fee1.getRut());
+        reportSummary.setNames("Juan");
+        reportSummary.setSurnames("Perez");
+        reportSummary.setBirthday("01/01/2000");
+        reportSummary.setSchool_type("Municipal");
+        reportSummary.setSchool_name("Liceo A-1");
+        reportSummary.setSenior_year(2018);
+        reportSummary.setTotal_fees(3);
+        reportSummary.setTotal_paid_fees(2);
+        reportSummary.setTotal_unpaid_fees(1);
+        reportSummary.setTotal_fees_amount(30000);
+        reportSummary.setTotal_paid_fees_amount(20000);
+        reportSummary.setTotal_unpaid_fees_amount(10000);
+        reportSummaryRepository.save(reportSummary);
+
+        assertEquals(2, reportSummaryService.calculateNumberOfPaidFees(fee1.getRut()));
+        feeRepository.delete(fee1);
+        feeRepository.delete(fee2);
+        reportSummaryRepository.delete(reportSummary);
+    }
+
+    @Test
+    void getDataTest(){
+        StudentEntity student = new StudentEntity();
+
+        student.setRut("21305689-1");
+        student.setNames("Juan");
+        student.setSurnames("Perez");
+        student.setBirthday("01/01/2000");
+        student.setSchool_type("Municipal");
+        student.setSchool_name("Liceo A-1");
+        student.setSenior_year(2018);
+        studentService.saveStudent(student.getRut(), student.getNames(), student.getSurnames(),
+                student.getBirthday(), student.getSchool_type(), student.getSchool_name(),
+                student.getSenior_year());
+
+        ReportSummaryEntity reportSummary = new ReportSummaryEntity();
+        reportSummary.setRut(student.getRut());
+        reportSummary.setNames(student.getNames());
+        reportSummary.setSurnames(student.getSurnames());
+        reportSummary.setBirthday(student.getBirthday());
+        reportSummary.setSchool_type(student.getSchool_type());
+        reportSummary.setSchool_name(student.getSchool_name());
+        reportSummary.setSenior_year(student.getSenior_year());
+        reportSummary.setTotal_fees(0);
+        reportSummary.setTotal_paid_fees(0);
+        reportSummary.setTotal_unpaid_fees(0);
+        reportSummary.setTotal_fees_amount(0);
+        reportSummary.setTotal_paid_fees_amount(0);
+        reportSummary.setTotal_unpaid_fees_amount(0);
+        reportSummaryRepository.save(reportSummary);
+
+        assertNotEquals(new ArrayList<>(), reportSummaryService.getData());
+        studentRepository.delete(student);
+        reportSummaryRepository.delete(reportSummary);
+    }
+
+    @Test
+    void calculateTotalPriceByFeesTest(){
+        FeeEntity fee1 = new FeeEntity();
+        FeeEntity fee2 = new FeeEntity();
+        FeeEntity fee3 = new FeeEntity();
+        fee1.setRut("21305689-1");
+        fee1.setLast_payment("07/07/2023");
+        fee1.setState("PAID");
+        fee1.setPrice(10000);
+        fee2.setRut("21305689-1");
+        fee2.setLast_payment("07/07/2023");
+        fee2.setState("PAID");
+        fee2.setPrice(10000);
+        fee3.setRut("21305689-1");
+        fee3.setLast_payment("07/07/2023");
+        fee3.setState("NOTPAID");
+        fee3.setPrice(10000);
+        feeRepository.save(fee1);
+        feeRepository.save(fee2);
+
+        ReportSummaryEntity reportSummary = new ReportSummaryEntity();
+        reportSummary.setRut(fee1.getRut());
+        reportSummary.setNames("Juan");
+        reportSummary.setSurnames("Perez");
+        reportSummary.setBirthday("01/01/2000");
+        reportSummary.setSchool_type("Municipal");
+        reportSummary.setSchool_name("Liceo A-1");
+        reportSummary.setSenior_year(2018);
+        reportSummary.setTotal_fees(3);
+        reportSummary.setTotal_paid_fees(2);
+        reportSummary.setTotal_unpaid_fees(1);
+        reportSummary.setTotal_fees_amount(30000);
+        reportSummary.setTotal_paid_fees_amount(20000);
+        reportSummary.setTotal_unpaid_fees_amount(10000);
+        reportSummaryRepository.save(reportSummary);
+
+        assertEquals(30000, reportSummaryService.calculateTotalPriceByFees(fee1.getRut()));
+        feeRepository.delete(fee1);
+        feeRepository.delete(fee2);
+        reportSummaryRepository.delete(reportSummary);
+    }
+
+    @Test
+    void calculateTotalPaidTest(){
+        FeeEntity fee1 = new FeeEntity();
+        FeeEntity fee2 = new FeeEntity();
+        FeeEntity fee3 = new FeeEntity();
+        fee1.setRut("21305689-1");
+        fee1.setLast_payment("07/07/2023");
+        fee1.setState("PAID");
+        fee1.setPrice(10000);
+        fee2.setRut("21305689-1");
+        fee2.setLast_payment("07/07/2023");
+        fee2.setState("PAID");
+        fee2.setPrice(10000);
+        fee3.setRut("21305689-1");
+        fee3.setLast_payment("07/07/2023");
+        fee3.setState("NOTPAID");
+        fee3.setPrice(10000);
+        feeRepository.save(fee1);
+        feeRepository.save(fee2);
+
+        ReportSummaryEntity reportSummary = new ReportSummaryEntity();
+        reportSummary.setRut(fee1.getRut());
+        reportSummary.setNames("Juan");
+        reportSummary.setSurnames("Perez");
+        reportSummary.setBirthday("01/01/2000");
+        reportSummary.setSchool_type("Municipal");
+        reportSummary.setSchool_name("Liceo A-1");
+        reportSummary.setSenior_year(2018);
+        reportSummary.setTotal_fees(3);
+        reportSummary.setTotal_paid_fees(2);
+        reportSummary.setTotal_unpaid_fees(1);
+        reportSummary.setTotal_fees_amount(30000);
+        reportSummary.setTotal_paid_fees_amount(20000);
+        reportSummary.setTotal_unpaid_fees_amount(10000);
+        reportSummaryRepository.save(reportSummary);
+
+        assertEquals(20000, reportSummaryService.calculateTotalPaid(fee1.getRut()));
+        feeRepository.delete(fee1);
+        feeRepository.delete(fee2);
+        reportSummaryRepository.delete(reportSummary);
+    }
+
+    @Test
+    void calculateTotalDebtTest(){
+        FeeEntity fee1 = new FeeEntity();
+        FeeEntity fee2 = new FeeEntity();
+        FeeEntity fee3 = new FeeEntity();
+        fee1.setRut("21305689-1");
+        fee1.setLast_payment("07/07/2023");
+        fee1.setState("PAID");
+        fee1.setPrice(10000);
+        fee2.setRut("21305689-1");
+        fee2.setLast_payment("07/07/2023");
+        fee2.setState("PAID");
+        fee2.setPrice(10000);
+        fee3.setRut("21305689-1");
+        fee3.setLast_payment("07/07/2023");
+        fee3.setState("NOTPAID");
+        fee3.setPrice(10000);
+        feeRepository.save(fee1);
+        feeRepository.save(fee2);
+
+        ReportSummaryEntity reportSummary = new ReportSummaryEntity();
+        reportSummary.setRut(fee1.getRut());
+        reportSummary.setNames("Juan");
+        reportSummary.setSurnames("Perez");
+        reportSummary.setBirthday("01/01/2000");
+        reportSummary.setSchool_type("Municipal");
+        reportSummary.setSchool_name("Liceo A-1");
+        reportSummary.setSenior_year(2018);
+        reportSummary.setTotal_fees(3);
+        reportSummary.setTotal_paid_fees(2);
+        reportSummary.setTotal_unpaid_fees(1);
+        reportSummary.setTotal_fees_amount(30000);
+        reportSummary.setTotal_paid_fees_amount(20000);
+        reportSummary.setTotal_unpaid_fees_amount(10000);
+        reportSummaryRepository.save(reportSummary);
+
+        assertEquals(10000, reportSummaryService.calculateTotalDebt(fee1.getRut()));
+        feeRepository.delete(fee1);
+        feeRepository.delete(fee2);
+        reportSummaryRepository.delete(reportSummary);
+    }
+
+    @Test
+    void findByRutTest(){
+        StudentEntity student = new StudentEntity();
+
+        student.setRut("21305689-1");
+        student.setNames("Juan");
+        student.setSurnames("Perez");
+        student.setBirthday("01/01/2000");
+        student.setSchool_type("Municipal");
+        student.setSchool_name("Liceo A-1");
+        student.setSenior_year(2018);
+        studentService.saveStudent(student.getRut(), student.getNames(), student.getSurnames(),
+                student.getBirthday(), student.getSchool_type(), student.getSchool_name(),
+                student.getSenior_year());
+
+        ReportSummaryEntity reportSummary = new ReportSummaryEntity();
+        reportSummary.setRut(student.getRut());
+        reportSummary.setNames(student.getNames());
+        reportSummary.setSurnames(student.getSurnames());
+        reportSummary.setBirthday(student.getBirthday());
+        reportSummary.setSchool_type(student.getSchool_type());
+        reportSummary.setSchool_name(student.getSchool_name());
+        reportSummary.setSenior_year(student.getSenior_year());
+        reportSummary.setTotal_fees(0);
+        reportSummary.setTotal_paid_fees(0);
+        reportSummary.setTotal_unpaid_fees(0);
+        reportSummary.setTotal_fees_amount(0);
+        reportSummary.setTotal_paid_fees_amount(0);
+        reportSummary.setTotal_unpaid_fees_amount(0);
+        reportSummaryRepository.save(reportSummary);
+
+        assertEquals(reportSummary, reportSummaryService.findByRut(student.getRut()));
+        studentRepository.delete(student);
+        reportSummaryRepository.delete(reportSummary);
+    }
+
+    @Test
+    void areAnyFeesPaidTest(){
+        FeeEntity fee1 = new FeeEntity();
+        FeeEntity fee2 = new FeeEntity();
+        fee1.setRut("21305689-1");
+        fee1.setLast_payment("07/07/2023");
+        fee1.setState("PAID");
+        fee2.setRut("21305689-1");
+        fee2.setLast_payment("07/07/2023");
+        fee2.setState("PAID");
+        feeRepository.save(fee1);
+        feeRepository.save(fee2);
+        
+        ReportSummaryEntity reportSummary = new ReportSummaryEntity();
+        assertEquals(true, reportSummaryService.areAnyFeesPaid(fee1.getRut()));
+        feeRepository.delete(fee1);
+        feeRepository.delete(fee2);
+        reportSummaryRepository.delete(reportSummary);
     }
 }

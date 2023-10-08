@@ -26,7 +26,7 @@ services:
     container_name: tingeso_1
     image: valenpy22/tingeso_1
     ports:
-      - "8091:8091"
+      - "8092:8091"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/bdtemp?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
       - SPRING_DATASOURCE_USERNAME=root
@@ -40,7 +40,7 @@ services:
     container_name: tingeso_2
     image: valenpy22/tingeso_1
     ports:
-      - "8092:8091"
+      - "8093:8091"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/bdtemp?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
       - SPRING_DATASOURCE_USERNAME=root
@@ -54,7 +54,7 @@ services:
     container_name: tingeso_3
     image: valenpy22/tingeso_1
     ports:
-      - "8093:8091"
+      - "8094:8091"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/bdtemp?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
       - SPRING_DATASOURCE_USERNAME=root
