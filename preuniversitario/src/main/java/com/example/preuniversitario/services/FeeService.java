@@ -84,6 +84,7 @@ public class FeeService {
         double total_amount = 0;
 
         for(FeeEntity fee : paid_fees){
+            System.out.println(fee.getPrice());
             total_amount = total_amount + fee.getPrice();
         }
 

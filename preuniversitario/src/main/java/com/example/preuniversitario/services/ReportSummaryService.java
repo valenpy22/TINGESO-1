@@ -199,23 +199,25 @@ public class ReportSummaryService {
         String last_date = uploadDataService.getLastExamDate(rut);
         double average_score = uploadDataService.getAverageScoreByRutAndMonth(rut, last_date);
         ArrayList<FeeEntity> fees = feeService.findFees(rut);
+        System.out.println(last_date + " " + average_score);
 
         double discount = 0;
         for(FeeEntity fee : fees){
             if(fee.getState().equals("PENDING")){
                 if(average_score >= 950 && average_score <= 1000){
-                    fee.setPrice(fee.getPrice()*0.9);
                     discount = fee.getPrice()*0.1;
+                    fee.setPrice(fee.getPrice()*0.9);
                 }else if(average_score >= 900 && average_score < 950){
-                    fee.setPrice(fee.getPrice()*0.95);
                     discount = fee.getPrice()*0.05;
+                    fee.setPrice(fee.getPrice()*0.95);
                 }else if(average_score >= 850 && average_score < 900){
-                    fee.setPrice(fee.getPrice()*0.98);
                     discount = fee.getPrice()*0.02;
+                    fee.setPrice(fee.getPrice()*0.98);
                 }
                 feeService.save(fee);
             }
         }
+        System.out.println(discount);
         return discount;
     }
 
@@ -246,9 +248,7 @@ public class ReportSummaryService {
             }
 
             return max_date.isBefore(date_now);
-        }else{
-            return false;
-        }
+        }else return fee.getState().equals("NOTPAID");
     }
 
     public double calculateInterestByMonthsLate(String rut){
@@ -257,7 +257,7 @@ public class ReportSummaryService {
         double interest = 0;
 
         for(FeeEntity fee : fees){
-            if(isFeeLate(fee) && fee.getState().equals("PENDING")){
+            if(isFeeLate(fee)){
                 if(months_late > 3){
                     interest = fee.getPrice()*0.15;
                     fee.setPrice(fee.getPrice()*1.15);
