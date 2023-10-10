@@ -39,7 +39,11 @@ services:
     container_name: tingeso_2
     image: valenpy22/tingeso_1
     ports:
+<<<<<<< HEAD
       - "8091:8090"
+=======
+      - "8093:8091"
+>>>>>>> main
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/bdtemp?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
       - SPRING_DATASOURCE_USERNAME=root
@@ -48,4 +52,8 @@ services:
       restart_policy:
         condition: on-failure
     depends_on:
+<<<<<<< HEAD
       - mysql-db
+=======
+      - mysql-db
+>>>>>>> main
