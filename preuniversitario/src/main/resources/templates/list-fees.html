@@ -139,9 +139,11 @@
 <div align="center" class="container my-2">
     <h1><b>Listado de cuotas</b></h1>
     <div class="search-form">
-        <label for="rut"><strong>Rut</strong></label>
-        <input type="text" id="rut" placeholder="Ingrese el rut del estudiante" name="rut">
-        <button class="pay-button" type="submit">Buscar</button>
+        <form th:action="@{/list-fees}" method="get">
+            <label for="rut"><strong>Rut</strong></label>
+            <input type="text" id="rut" placeholder="Ingrese el rut del estudiante" name="rut">
+            <button class="pay-button" type="submit">Buscar</button>
+        </form>
     </div>
     <table border="1" class="content-table">
         <thead>
