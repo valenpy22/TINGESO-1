@@ -58,7 +58,7 @@ public class ReportSummaryTest {
         reportSummary.setSurnames(student.getSurnames());
         reportSummaryRepository.save(reportSummary);
 
-        assertNotEquals(new ArrayList<>(), reportSummaryService.getReportsSummary());
+        assertNotEquals(new ArrayList<>(), reportSummaryService.calculateAll());
         reportSummaryRepository.deleteAll();
         feeRepository.deleteAll();
         studentRepository.deleteAll();
