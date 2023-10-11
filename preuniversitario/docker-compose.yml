@@ -5,7 +5,7 @@ services:
     container_name: nginx-proxy
     restart: always
     ports:
-      - "81:81"
+      - "80:80"
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d
     depends_on:
@@ -20,12 +20,12 @@ services:
       MYSQL_ROOT_PASSWORD: Tingeso2023#
       MYSQL_DATABASE: bdtemp
     ports:
-      - 33061:3306
+      - 33059:3306
   app1:
     container_name: tingeso_1
     image: valenpy22/tingeso_1
     ports:
-      - "8092:8091"
+      - "8090:8090"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/bdtemp?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
       - SPRING_DATASOURCE_USERNAME=root
@@ -39,7 +39,7 @@ services:
     container_name: tingeso_2
     image: valenpy22/tingeso_1
     ports:
-      - "8093:8091"
+      - "8091:8090"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/bdtemp?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
       - SPRING_DATASOURCE_USERNAME=root
