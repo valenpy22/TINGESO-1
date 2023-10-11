@@ -52,6 +52,7 @@ public class PaymentTest {
         uploadData.setScore("900");
         uploadData.setExam_date("10/10/2023");
         reportSummary.setRut(student.getRut());
+        reportSummary.setPayment_method("Cuotas");
         studentRepository.save(student);
         uploadDataRepository.save(uploadData);
         reportSummaryRepository.save(reportSummary);
