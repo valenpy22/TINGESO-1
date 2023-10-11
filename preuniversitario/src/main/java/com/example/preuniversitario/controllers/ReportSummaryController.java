@@ -30,8 +30,15 @@ public class ReportSummaryController {
 
     @GetMapping("/report-summary")
     public String listReportSummary(Model model){
-        ArrayList<ReportSummaryEntity> reportSummary = reportSummaryService.getReportsSummary();
+        ArrayList<ReportSummaryEntity> reportSummary = reportSummaryService.getReportsSummarys();
         model.addAttribute("reportSummary", reportSummary);
+        return "report-summary";
+    }
+
+    @PostMapping("/report-summary")
+    public String calculateReportsSummarys(Model model){
+        ArrayList<ReportSummaryEntity> reportSummaryEntities = reportSummaryService.calculateAll();
+        model.addAttribute("reportSummary", reportSummaryEntities);
         return "report-summary";
     }
 
@@ -43,6 +50,6 @@ public class ReportSummaryController {
     @PostMapping("/generate-fees")
     public String generateFee(@RequestParam("rut") String rut, @RequestParam("number_of_fees") String number_of_fees){
         reportSummaryService.generateFees(rut, number_of_fees);
-        return "redirect:/generate-fees";
+        return "/generate-fees";
     }
 }

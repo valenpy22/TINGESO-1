@@ -1,7 +1,9 @@
 package com.example.preuniversitario.services;
 
+import com.example.preuniversitario.entities.FeeEntity;
 import com.example.preuniversitario.entities.StudentEntity;
 import com.example.preuniversitario.entities.UploadDataEntity;
+import com.example.preuniversitario.repositories.FeeRepository;
 import com.example.preuniversitario.repositories.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,9 @@ import java.util.Optional;
 public class StudentService {
     @Autowired
     StudentRepository studentRepository;
+
+    @Autowired
+    FeeRepository feeRepository;
 
     public ArrayList<StudentEntity> getStudents(){
         return (ArrayList<StudentEntity>) studentRepository.findAll();
