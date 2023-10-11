@@ -128,7 +128,7 @@ public class FeeService {
             fee.setState("PAID");
             fee.setPayment_date(date_now);
         }else{
-            fee.setState("PENDING");
+            fee.setState(fee.getState());
         }
         feeRepository.save(fee);
     }

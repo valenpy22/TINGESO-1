@@ -106,44 +106,48 @@
 </header>
 <div class="container">
     <h1><b>Reportes resumen</b></h1>
-    <div class="table-container">
-        <table class="content-table">
-            <thead>
-            <tr>
-                <th>Rut</th>
-                <th>Nombres</th>
-                <th>Apellidos</th>
-                <th>N° de exámenes</th>
-                <th>Puntaje promedio</th>
-                <th>Monto total arancel</th>
-                <th>Tipo Pago</th>
-                <th>N° cuotas</th>
-                <th>N° cuotas pagadas</th>
-                <th>Monto pagado</th>
-                <th>Último pago</th>
-                <th>Saldo por pagar</th>
-                <th>N° cuotas atrasadas</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="report:${reportSummary}">
-                <td th:text="${report.rut}"></td>
-                <td th:text="${report.names}"></td>
-                <td th:text="${report.surnames}"></td>
-                <td th:text="${report.exam_number}"></td>
-                <td th:text="${report.average_score}"></td>
-                <td th:text="${report.final_price}"></td>
-                <td th:text="${report.payment_method}"></td>
-                <td th:text="${report.total_fees}"></td>
-                <td th:text="${report.paid_fees}"></td>
-                <td th:text="${report.total_paid}"></td>
-                <td th:text="${report.last_payment}"></td>
-                <td th:text="${report.debt}"></td>
-                <td th:text="${report.late_fees}"></td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+    <form method="post" action="/report-summary">
+        <div class="table-container">
+            <table class="content-table">
+                <thead>
+                <tr>
+                    <th>Rut</th>
+                    <th>Nombres</th>
+                    <th>Apellidos</th>
+                    <th>N° de exámenes</th>
+                    <th>Puntaje promedio</th>
+                    <th>Monto total arancel</th>
+                    <th>Tipo Pago</th>
+                    <th>N° cuotas</th>
+                    <th>N° cuotas pagadas</th>
+                    <th>Monto pagado</th>
+                    <th>Último pago</th>
+                    <th>Saldo por pagar</th>
+                    <th>N° cuotas atrasadas</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="report:${reportSummary}">
+                    <td th:text="${report.rut}"></td>
+                    <td th:text="${report.names}"></td>
+                    <td th:text="${report.surnames}"></td>
+                    <td th:text="${report.exam_number}"></td>
+                    <td th:text="${report.average_score}"></td>
+                    <td th:text="${report.final_price}"></td>
+                    <td th:text="${report.payment_method}"></td>
+                    <td th:text="${report.total_fees}"></td>
+                    <td th:text="${report.paid_fees}"></td>
+                    <td th:text="${report.total_paid}"></td>
+                    <td th:text="${report.last_payment}"></td>
+                    <td th:text="${report.debt}"></td>
+                    <td th:text="${report.late_fees}"></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <button type="submit" class="btn" style="margin-top: 20px;">Calcular Reporte</button>
+        </div>
+    </form>
 </div>
 </body>
 </html>
