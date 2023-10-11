@@ -39,6 +39,7 @@ public class PaymentTest {
 
     @Test
     void calculateDiscountsTest(){
+        paymentRepository.deleteAll();
         PaymentEntity payment = new PaymentEntity();
         StudentEntity student = new StudentEntity();
         UploadDataEntity uploadData = new UploadDataEntity();
@@ -48,6 +49,8 @@ public class PaymentTest {
         student.setSchool_type("Municipal");
         student.setSenior_year(2021);
         uploadData.setRut("21305689-1");
+        uploadData.setScore("900");
+        uploadData.setExam_date("10/10/2023");
         reportSummary.setRut(student.getRut());
         studentRepository.save(student);
         uploadDataRepository.save(uploadData);
@@ -65,13 +68,15 @@ public class PaymentTest {
         ArrayList<PaymentEntity> arrayList = paymentService.calculateDiscounts();
 
         //CAMBIAR PARA EL DÍA DE LA PRUEBA
-        assertNull(arrayList);
+        assertNotNull(arrayList);
         paymentRepository.deleteAll();
     }
 
     @Test
     void getAllDiscountsTest(){
+        paymentRepository.deleteAll();
         ArrayList<PaymentEntity> paymentEntities = paymentService.getAllDiscounts();
         assertEquals(new ArrayList<>(), paymentEntities);
+        paymentRepository.deleteAll();
     }
 }
