@@ -76,7 +76,7 @@ public class FeeController {
     }
 
 
-    @PostMapping("/delete-all")
+    @GetMapping("/delete-all")
     public String deleteAll(){
         feeService.deleteFees();
         paymentService.deleteAll();
@@ -84,7 +84,7 @@ public class FeeController {
         studentService.deleteAll();
         uploadDataService.deleteAll();
 
-        return "/";
+        return "delete-all";
     }
 
 }
