@@ -80,4 +80,13 @@ public class PaymentTest {
         assertEquals(new ArrayList<>(), paymentEntities);
         paymentRepository.deleteAll();
     }
+
+    @Test
+    void deleteAllPaymentsTest(){
+        PaymentEntity payment = new PaymentEntity();
+        payment.setTotal_price(1000);
+        paymentRepository.save(payment);
+        paymentService.deleteAll();
+        assertEquals(new ArrayList<>(), paymentService.getAllDiscounts());
+    }
 }

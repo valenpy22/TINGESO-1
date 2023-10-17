@@ -140,4 +140,13 @@ public class UploadDataTest {
         assertEquals("07/11/2023", uploadDataService.getLastExamDate(u1.getRut()));
         uploadDataRepository.deleteAll();
     }
+
+    @Test
+    void deleteAllUploadDataTest(){
+        UploadDataEntity uploadData = new UploadDataEntity();
+        uploadData.setRut("1");
+        uploadDataRepository.save(uploadData);
+        uploadDataService.deleteAll();
+        assertEquals(new ArrayList<>(), uploadDataRepository.findAll());
+    }
 }

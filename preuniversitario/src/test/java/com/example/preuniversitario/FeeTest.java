@@ -219,4 +219,19 @@ public class FeeTest {
 
      */
 
+    @Test
+    void deleteAllFeesTest(){
+        FeeEntity fee1 = new FeeEntity();
+
+        fee1.setRut("21305689-1");
+        fee1.setState("PAID");
+        fee1.setPrice(15000);
+        fee1.setMax_date_payment("10/10/2023");
+        fee1.setNumber_of_fee(1);
+        fee1.setPayment_date("07/10/2023");
+        feeService.save(fee1);
+        feeService.deleteFees();
+        assertEquals(new ArrayList<>(), feeService.getAllFees());
+    }
+
 }

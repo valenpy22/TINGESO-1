@@ -770,4 +770,14 @@ public class ReportSummaryTest {
         studentRepository.deleteAll();
         uploadDataRepository.deleteAll();
     }
+
+    @Test
+    void deleteReportsSummaryTest(){
+        ReportSummaryEntity reportSummary = new ReportSummaryEntity();
+        reportSummary.setLast_payment("01/08/2023");
+        reportSummary.setRut("1");
+        reportSummaryRepository.save(reportSummary);
+        reportSummaryService.deleteAll();
+        assertEquals(new ArrayList<>(), reportSummaryRepository.findAll());
+    }
 }

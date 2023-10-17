@@ -58,4 +58,14 @@ public class StudentTest {
         assertEquals(student, studentService.findByRut(student.getRut()));
         studentRepository.delete(student);
     }
+
+    @Test
+    void deleteAllStudentsTest(){
+        StudentEntity student = new StudentEntity();
+        student.setSenior_year(2021);
+        student.setRut("1");
+        studentRepository.save(student);
+        studentService.deleteAll();
+        assertEquals(new ArrayList<>(), studentRepository.findAll());
+    }
 }
