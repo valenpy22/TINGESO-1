@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/*
+* This class represents a payment with discounts.
+* */
 @Entity
 @Table(name = "payments")
 @NoArgsConstructor

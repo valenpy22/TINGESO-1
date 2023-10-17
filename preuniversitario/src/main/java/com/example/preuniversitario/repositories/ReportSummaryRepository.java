@@ -6,6 +6,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+
+/*
+* This interface represents a report summary repository.
+* */
 @Repository
 public interface ReportSummaryRepository extends JpaRepository<ReportSummaryEntity, String> {
     @Query(value = "SELECT * FROM reports WHERE reports.rut = :rut", nativeQuery = true)

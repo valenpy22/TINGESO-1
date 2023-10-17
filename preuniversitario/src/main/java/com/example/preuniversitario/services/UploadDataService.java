@@ -18,6 +18,9 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+* This class represents an uploaddata service.
+* */
 @Service
 public class UploadDataService {
     @Autowired
@@ -25,10 +28,19 @@ public class UploadDataService {
 
     private final Logger logg = LoggerFactory.getLogger(UploadDataService.class);
 
+    /**
+     * This method gets all the exams.
+     * @return ArrayList<UploadDataEntity>
+     * */
     public ArrayList<UploadDataEntity> getData(){
         return (ArrayList<UploadDataEntity>) uploadDataRepository.findAll();
     }
 
+    /**
+     * This method saves a file.
+     * @param file
+     * @return String
+     * */
     @Generated
     public String save(MultipartFile file){
         String filename = file.getOriginalFilename();
@@ -49,6 +61,10 @@ public class UploadDataService {
         }
     }
 
+    /**
+     * This method reads a csv file.
+     * @param address
+     * */
     @Generated
     public void readCSV(String address){
         String text = "";
@@ -85,14 +101,20 @@ public class UploadDataService {
         }
     }
 
+    /**
+     * This method saves all the exams.
+     * @param data
+     * */
     public void saveData(UploadDataEntity data){
         uploadDataRepository.save(data);
     }
 
-    public void deleteData(ArrayList<UploadDataEntity> datas){
-        uploadDataRepository.deleteAll(datas);
-    }
-
+    /**
+     * This method saves the exams on the database.
+     * @param rut
+     * @param exam_date
+     * @param score
+     * */
     public void saveDataDB(String rut, String exam_date, String score){
         UploadDataEntity new_data = new UploadDataEntity();
         new_data.setRut(rut);
@@ -102,22 +124,47 @@ public class UploadDataService {
         saveData(new_data);
     }
 
+    /**
+     * This method gets all the ruts on the database.
+     * @return ArrayList<String>
+     * */
     public ArrayList<String> getRuts(){
         return (ArrayList<String>) uploadDataRepository.getRuts();
     }
 
+    /**
+     * This method gets the average score by a rut and the last month.
+     * @param rut
+     * @param exam_date
+     * @return double
+     * */
     public double getAverageScoreByRutAndMonth(String rut, String exam_date){
         return uploadDataRepository.getAverageScoreByRutAndMonth(rut, exam_date);
     }
 
+    /**
+     * This method gets the average score by a rut.
+     * @param rut
+     * @return double
+     * */
     public double getAverageScoreByRut(String rut){
         return uploadDataRepository.getAverageScoreByRut(rut);
     }
 
+    /**
+     * This method gets the number of exams by a rut.
+     * @param rut
+     * @return int
+     * */
     public int getNumberOfExamsByRut(String rut){
         return uploadDataRepository.getNumberOfExamsByRut(rut);
     }
 
+    /**
+     * This method gets the last exam date by a rut.
+     * @param rut
+     * @return String
+     * */
     public String getLastExamDate(String rut){
         return uploadDataRepository.findByExam_dateOrderByExam_dateDesc(rut);
     }

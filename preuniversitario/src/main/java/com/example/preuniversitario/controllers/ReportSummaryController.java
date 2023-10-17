@@ -16,6 +16,9 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+* This class represents a report summary controller.
+* */
 @Controller
 @RequestMapping
 public class ReportSummaryController {

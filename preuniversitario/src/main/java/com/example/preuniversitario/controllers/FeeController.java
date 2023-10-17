@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+* This class represents a fee controller.
+* */
 @Controller
 @RequestMapping
 public class FeeController {
@@ -23,7 +26,7 @@ public class FeeController {
 
     @Autowired
     PaymentService paymentService;
-
+    
     @GetMapping("/upload-fee")
     public String newFee(){
         return "upload-fee";

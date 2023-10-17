@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
+/*
+* This class represents an exam
+* */
 @Entity
 @Table(name = "data")
 @NoArgsConstructor

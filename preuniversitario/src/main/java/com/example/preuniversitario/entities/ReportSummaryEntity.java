@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
+/*
+* This class represents a report summary of a student
+* */
 @Entity
 @Table(name = "reports")
 @NoArgsConstructor

@@ -6,6 +6,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+/*
+* This interface represents a payment repository
+* */
 @Repository
 public interface PaymentRepository extends JpaRepository<PaymentEntity, String> {
     @Query(value = "SELECT * FROM payments WHERE payments.rut = :rut", nativeQuery = true)

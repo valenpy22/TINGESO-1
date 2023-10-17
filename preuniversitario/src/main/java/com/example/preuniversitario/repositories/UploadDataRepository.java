@@ -8,6 +8,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/*
+* This interface represents an exam (upload data) repository.
+* */
 @Repository
 public interface UploadDataRepository extends JpaRepository<UploadDataEntity, Integer> {
     @Query(value = "SELECT DISTINCT rut FROM data", nativeQuery = true)

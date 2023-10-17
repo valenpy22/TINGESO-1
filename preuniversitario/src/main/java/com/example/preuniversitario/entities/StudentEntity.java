@@ -10,6 +10,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
+/*
+* This class represents a student
+* */
 @Entity
 @Table(name = "students")
 @NoArgsConstructor

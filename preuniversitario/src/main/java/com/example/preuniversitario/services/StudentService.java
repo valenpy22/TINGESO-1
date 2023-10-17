@@ -13,6 +13,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Optional;
 
+/*
+* This class represents a student service.
+* */
 @Service
 public class StudentService {
     @Autowired
@@ -21,10 +24,24 @@ public class StudentService {
     @Autowired
     FeeRepository feeRepository;
 
+    /**
+     * This method gets all the students.
+     * @return ArrayList<StudentEntity>
+     * */
     public ArrayList<StudentEntity> getStudents(){
         return (ArrayList<StudentEntity>) studentRepository.findAll();
     }
 
+    /**
+     * This method saves a student.
+     * @param rut
+     * @param names
+     * @param surnames
+     * @param birthday
+     * @param school_type
+     * @param school_name
+     * @param senior_year
+     * */
     public void saveStudent(String rut, String names, String surnames, String birthday,
                             String school_type, String school_name, int senior_year){
         StudentEntity student = new StudentEntity();
@@ -38,6 +55,11 @@ public class StudentService {
         studentRepository.save(student);
     }
 
+    /**
+     * This method finds a student by their rut.
+     * @param rut
+     * @return StudentEntity
+     * */
     public StudentEntity findByRut(String rut){
         return studentRepository.findByRut(rut);
     }

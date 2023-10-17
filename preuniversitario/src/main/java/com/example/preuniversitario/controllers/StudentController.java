@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 
+/*
+* This class represents a student controller.
+* */
 @Controller
 @RequestMapping
 public class StudentController {

@@ -9,6 +9,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+/*
+* This class represents a payment service.s
+* */
 @Service
 public class PaymentService {
     @Autowired
@@ -26,6 +29,10 @@ public class PaymentService {
     @Autowired
     UploadDataService uploadDataService;
 
+    /**
+     * This method calculates all the discounts of all the students.
+     * @return ArrayList<PaymentEntity>
+     * */
     public ArrayList<PaymentEntity> calculateDiscounts(){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         String date_now = LocalDate.now().format(formatter);
@@ -75,6 +82,10 @@ public class PaymentService {
         }
     }
 
+    /**
+     * This method gets all the discounts.
+     * @return ArrayList<PaymentEntity>
+     * */
     public ArrayList<PaymentEntity> getAllDiscounts(){
         return (ArrayList<PaymentEntity>) paymentRepository.findAll();
     }

@@ -16,6 +16,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/*
+* This class represents a report summary service.
+* */
 @Service
 public class ReportSummaryService {
     @Autowired
@@ -33,10 +36,18 @@ public class ReportSummaryService {
     @Autowired
     PaymentRepository paymentRepository;
 
-
+    /**
+     * This method gets all the reports summarys.
+     * @return ArrayList<ReportSummaryEntity>
+     * */
     public ArrayList<ReportSummaryEntity> getReportsSummarys(){
         return (ArrayList<ReportSummaryEntity>) reportSummaryRepository.findAll();
     }
+
+    /**
+     * This method calculate all the reports.
+     * @return ArrayList<ReportSummaryEntity>
+     * */
     public ArrayList<ReportSummaryEntity> calculateAll() {
         List<String> listRuts = uploadDataService.getRuts();
 
@@ -47,6 +58,10 @@ public class ReportSummaryService {
         return (ArrayList<ReportSummaryEntity>) reportSummaryRepository.findAll();
     }
 
+    /**
+     * This method calculates all the discounts by a rut.
+     * @param rut
+     * */
     public void calculateSheet(String rut){
         ReportSummaryEntity reportSummary = reportSummaryRepository.findByRut(rut);
         reportSummary.setExam_number(calculateNumberOfExams(rut));
@@ -83,10 +98,22 @@ public class ReportSummaryService {
         reportSummaryRepository.save(reportSummary);
     }
 
+    /**
+     * This method calculates the number of exams of a student.
+     * @param rut
+     * @return int
+     * */
     public int calculateNumberOfExams(String rut){
         return uploadDataService.getNumberOfExamsByRut(rut);
     }
 
+    /**
+     * This method gets the payment method by the number of fees.
+     * If it equals to 0, it's "Contado".
+     * Else, "Cuotas".
+     * @param number_of_fees
+     * @return String
+     * */
     public String getPaymentMethod(String number_of_fees){
         if(number_of_fees.equals("0")){
             return "Contado";
@@ -95,6 +122,11 @@ public class ReportSummaryService {
         }
     }
 
+    /**
+     * This method gets the final price by the number of fees.
+     * @param number_of_fees
+     * @return double
+     * */
     public double getFinalPrice(String number_of_fees){
         if(number_of_fees.equals("0")){
             return 1500000*0.5;
@@ -103,6 +135,12 @@ public class ReportSummaryService {
         }
     }
 
+    /**
+     * This method gets the maximum number of fees by a rut.
+     * @param rut
+     * @param number_fees
+     * @return int
+     * */
     public int getTotalFees(String rut, String number_fees){
         StudentEntity student = studentService.findByRut(rut);
         int number_of_fees = Integer.parseInt(number_fees);
@@ -116,6 +154,11 @@ public class ReportSummaryService {
         }
     }
 
+    /**
+     * This method calculates the final price by the discounts made.
+     * @param rut
+     * @return double
+     * */
     public double calculateFinalPriceByDiscount(String rut){
         StudentEntity student = studentService.findByRut(rut);
         ReportSummaryEntity reportSummary = reportSummaryRepository.findByRut(rut);
@@ -129,6 +172,11 @@ public class ReportSummaryService {
         }
     }
 
+    /**
+     * This method calculates the discount by the school type.
+     * @param school_type
+     * @return double
+     * */
     public double calculateDiscountBySchoolType(String school_type){
         double total_discount = 0;
         if(school_type.equals("Municipal")){
@@ -139,7 +187,11 @@ public class ReportSummaryService {
         return total_discount;
     }
 
-    //USED
+    /**
+     * This method calculates the discount by senior year.
+     * @param senior_year
+     * @return double
+     * */
     public double calculateDiscountBySeniorYear(int senior_year){
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -162,6 +214,12 @@ public class ReportSummaryService {
         return total_discount;
     }
 
+    /**
+     * This method get the fee price by the final price
+     * and dividing it by the number of fees.
+     * @param rut
+     * @return double
+     * */
     public double getFeePrice(String rut){
         ReportSummaryEntity reportSummary = reportSummaryRepository.findByRut(rut);
         double final_price = reportSummary.getFinal_price();
@@ -169,6 +227,10 @@ public class ReportSummaryService {
         return final_price/real_number_of_fees;
     }
 
+    /**
+     * This method gets the current month.
+     * @return int
+     * */
     public int getMonth(){
         Date date = new Date();
         ZoneId timeZone = ZoneId.systemDefault();
@@ -176,7 +238,10 @@ public class ReportSummaryService {
         return date.toInstant().atZone(timeZone).getMonthValue();
     }
 
-    //USED
+    /**
+     * This method gets the current year.
+     * @return int
+     * */
     public int getYear(){
         Date date = new Date();
         ZoneId timeZone = ZoneId.systemDefault();
@@ -184,6 +249,11 @@ public class ReportSummaryService {
         return date.toInstant().atZone(timeZone).getYear();
     }
 
+    /**
+     * This method generates the fees by a rut and a number of fees.
+     * @param rut
+     * @param number_of_fees
+     * */
     public void generateFees(String rut, String number_of_fees){
         StudentEntity student = studentService.findByRut(rut);
         ReportSummaryEntity reportSummary = new ReportSummaryEntity();
@@ -228,6 +298,11 @@ public class ReportSummaryService {
 
     }
 
+    /**
+     * This method calculates de discount by average score of the last month.
+     * @param rut
+     * @return double
+     * */
     public double calculateDiscountByAverageScore(String rut){
         String last_date = uploadDataService.getLastExamDate(rut);
         double average_score = uploadDataService.getAverageScoreByRutAndMonth(rut, last_date);
@@ -254,6 +329,11 @@ public class ReportSummaryService {
         return discount;
     }
 
+    /**
+     * This method calculates how many months are late by a rut.
+     * @param rut
+     * @return int
+     * */
     public int calculateMonthsLate(String rut){
         List<FeeEntity> fees = feeService.findFees(rut);
 
@@ -267,6 +347,11 @@ public class ReportSummaryService {
 
     }
 
+    /**
+     * This method determines if a fee is late.
+     * @param fee
+     * @return boolean
+     * */
     public boolean isFeeLate(FeeEntity fee){
         if(fee.getPayment_date() == null){
             String max_date_payment = fee.getMax_date_payment();
@@ -284,6 +369,11 @@ public class ReportSummaryService {
         }else return !fee.getState().equals("PAID");
     }
 
+    /**
+     * This method calculates the interest based on the months late.
+     * @param rut
+     * @return double
+     * */
     public double calculateInterestByMonthsLate(String rut){
         int months_late = calculateMonthsLate(rut);
         List<FeeEntity> fees = feeService.findFees(rut);
@@ -310,18 +400,37 @@ public class ReportSummaryService {
         return interest;
     }
 
+    /**
+     * This method calculates the average score of a student
+     * @param rut
+     * @return double
+     * */
     public double calculateAverageScore(String rut){
         return uploadDataService.getAverageScoreByRut(rut);
     }
 
+    /**
+     * This method calculates the number of paid fees by a rut.
+     * @param rut
+     * @return int
+     * */
     public int calculateNumberOfPaidFees(String rut){
         return feeService.getCountPaidFees(rut);
     }
 
+    /**
+     * This method gets all the reports summaries.
+     * @return ArrayList<ReportSummaryEntity>
+     * */
     public ArrayList<ReportSummaryEntity> getData(){
         return (ArrayList<ReportSummaryEntity>) reportSummaryRepository.findAll();
     }
 
+    /**
+     * This method calculates the total price by the fee prices.
+     * @param rut
+     * @return double
+     * */
     public double calculateTotalPriceByFees(String rut){
         List<FeeEntity> fees = feeService.findFees(rut);
         double total = 0;
@@ -333,10 +442,20 @@ public class ReportSummaryService {
         return total;
     }
 
+    /**
+     * This method calculates all the money paid.
+     * @param rut
+     * @return double
+     * */
     public double calculateTotalPaid(String rut){
         return feeService.getTotalAmountPaid(rut);
     }
 
+    /**
+     * This method calculates the total debt.
+     * @param rut
+     * @return double
+     * */
     public double calculateTotalDebt(String rut){
         List<FeeEntity> fees = feeService.findFees(rut);
         double total_debt = 0;
@@ -348,10 +467,20 @@ public class ReportSummaryService {
         return total_debt;
     }
 
+    /**
+     * This method gets a report summary by a rut.
+     * @param rut
+     * @return ReportSummaryEntity
+     * */
     public ReportSummaryEntity findByRut(String rut){
         return reportSummaryRepository.findByRut(rut);
     }
 
+    /**
+     * This method determines if there are any paid fees of a person by a rut.
+     * @param rut
+     * @return boolean
+     * */
     public boolean areAnyFeesPaid(String rut){
         ArrayList<FeeEntity> fees = feeService.findFees(rut);
 

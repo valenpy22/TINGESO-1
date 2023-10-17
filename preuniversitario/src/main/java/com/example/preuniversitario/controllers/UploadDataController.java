@@ -14,6 +14,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 
+/*
+* This class represents an exam controller.
+* */
 @Controller
 @RequestMapping
 public class UploadDataController {

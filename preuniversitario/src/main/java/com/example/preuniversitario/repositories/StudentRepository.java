@@ -6,6 +6,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+/*
+* This interface represents a student repository.
+* */
 @Repository
 public interface StudentRepository extends JpaRepository<StudentEntity, String> {
 

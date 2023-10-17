@@ -8,10 +8,11 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/*
+* This interface represents a fee repository.
+* */
 @Repository
 public interface FeeRepository extends JpaRepository<FeeEntity, String> {
-
-    //It returns just one entity
     FeeEntity findById(@Param("id") Long id);
 
     @Query(value = "SELECT * FROM fees WHERE fees.rut = :rut", nativeQuery = true)
