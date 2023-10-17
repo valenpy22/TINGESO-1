@@ -64,4 +64,10 @@ public class StudentService {
         return studentRepository.findByRut(rut);
     }
 
+    /**
+     * This method deletes all the students
+     * */
+    public void deleteAll(){
+        studentRepository.deleteAll();
+    }
 }

@@ -169,4 +169,10 @@ public class UploadDataService {
         return uploadDataRepository.findByExam_dateOrderByExam_dateDesc(rut);
     }
 
+    /**
+     * This method deletes all the exams.
+     * */
+    public void deleteAll(){
+        uploadDataRepository.deleteAll();
+    }
 }

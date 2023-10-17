@@ -90,4 +90,10 @@ public class PaymentService {
         return (ArrayList<PaymentEntity>) paymentRepository.findAll();
     }
 
+    /**
+     * This method deletes all the payments
+     * */
+    public void deleteAll(){
+        paymentRepository.deleteAll();
+    }
 }

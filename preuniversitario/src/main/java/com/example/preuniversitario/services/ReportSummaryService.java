@@ -491,4 +491,13 @@ public class ReportSummaryService {
         }
         return false;
     }
+
+    /**
+     * This method deletes all the reports
+     * */
+
+    public void deleteAll(){
+        reportSummaryRepository.deleteAll();
+    }
+
 }

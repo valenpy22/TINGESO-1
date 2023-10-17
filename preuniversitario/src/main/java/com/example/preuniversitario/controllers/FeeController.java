@@ -2,8 +2,7 @@ package com.example.preuniversitario.controllers;
 
 import com.example.preuniversitario.entities.FeeEntity;
 import com.example.preuniversitario.entities.PaymentEntity;
-import com.example.preuniversitario.services.FeeService;
-import com.example.preuniversitario.services.PaymentService;
+import com.example.preuniversitario.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,7 +25,16 @@ public class FeeController {
 
     @Autowired
     PaymentService paymentService;
-    
+
+    @Autowired
+    ReportSummaryService reportSummaryService;
+
+    @Autowired
+    StudentService studentService;
+
+    @Autowired
+    UploadDataService uploadDataService;
+
     @GetMapping("/upload-fee")
     public String newFee(){
         return "upload-fee";
@@ -67,17 +75,16 @@ public class FeeController {
         return "list-fees";
     }
 
-    @GetMapping("/register-payments")
-    public String payment(){
-        return "register-payments";
-    }
-    @PostMapping("/register-payments")
-    public String payFeeDifferentDate(@RequestParam("rut") String rut,
-                                      @RequestParam("number_of_fee") int number_of_fee,
-                                      @RequestParam("payment_date") String payment_date){
-        feeService.saveFee(rut, number_of_fee, payment_date);
 
-        return "register-payments";
+    @PostMapping("/delete-all")
+    public String deleteAll(){
+        feeService.deleteFees();
+        paymentService.deleteAll();
+        reportSummaryService.deleteAll();
+        studentService.deleteAll();
+        uploadDataService.deleteAll();
+
+        return "/";
     }
 
 }
