@@ -1,0 +1,7 @@
+requests>=2.25.0
+# Las siguientes bibliotecas son estándar de Python y no necesitan instalación:
+# time
+# sys
+# os
+# hashlib
+# json

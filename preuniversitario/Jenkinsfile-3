@@ -21,17 +21,18 @@ pipeline {
             steps {
                 echo 'Realizando análisis de seguridad con VirusTotal...'
                 dir('preuniversitario'){
-	                // Ejecutar el script de Python para cada archivo que necesites analizar
-	                script {
-	                    def scanResult = sh(
-	                        script: "python3 virustotal_scan.py target/MyWebApp.jar",
-	                        returnStatus: true
-	                    )
-	                    
-	                    if (scanResult != 0) {
-	                        error "El análisis de seguridad ha fallado. Revisa los logs para más detalles."
-	                    }
-	                }
+	                               // Configurar entorno virtual de Python y ejecutar el análisis
+                sh '''
+                    # Crear y activar entorno virtual
+                    python3 -m venv venv
+                    . venv/bin/activate
+                    
+                    # Instalar dependencias
+                    pip install -r requirements.txt
+                    
+                    # Ejecutar el script
+                    python virustotal_scan.py target/MyWebApp.jar
+                '''
 		}
             }
         }
