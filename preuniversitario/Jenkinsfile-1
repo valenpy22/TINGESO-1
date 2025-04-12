@@ -4,7 +4,7 @@ pipeline {
     buildDiscarder(logRotator(numToKeepStr: '5'))
   }
   environment {
-    SONAR_TOKEN = credentials('SONAR_TOKEN')  // nombre del ID de la credencial
+    SONAR_TOKEN = credentials('jenkins-sonar')  // nombre del ID de la credencial
   }
   stages {
     stage('Scan') {
