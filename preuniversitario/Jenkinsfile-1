@@ -9,8 +9,10 @@ pipeline {
   stages {
     stage('Scan') {
       steps {
-        withSonarQubeEnv('sql1') {
-          sh './mvnw clean verify sonar:sonar -Dsonar.login=$SONAR_TOKEN'
+        dir('preuniversitario') {
+          withSonarQubeEnv('sql1') {
+            sh 'mvn clean verify sonar:sonar -Dsonar.login=$SONAR_TOKEN'
+          }
         }
       }
     }
