@@ -1,13 +1,16 @@
 pipeline {
-  agent { label 'linux' }
+  agent any
   options {
     buildDiscarder(logRotator(numToKeepStr: '5'))
+  }
+  environment {
+    SONAR_TOKEN = credentials('jenkins-sonar')  // nombre del ID de la credencial
   }
   stages {
     stage('Scan') {
       steps {
-        withSonarQubeEnv(installationName: 'sql1') {
-          sh './mvnw clean sonar:sonar'
+        withSonarQubeEnv('sql1') {
+          sh './mvnw clean verify sonar:sonar -Dsonar.login=$SONAR_TOKEN'
         }
       }
     }
