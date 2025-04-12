@@ -6,42 +6,44 @@ pipeline {
     }
     
     stages {
-        stage('Build') {
-            steps {
-                echo 'Building application...'
-                // Aquí van los comandos para construir tu aplicación
-                // Por ejemplo: sh 'mvn clean package'
-		sh 'mvn clean package -DskipTests'
-            }
-        }
-        
-        stage('Security Scan') {
-            steps {
-                echo 'Realizando análisis de seguridad con VirusTotal...'
-                
-                // Ejecutar el script de Python para cada archivo que necesites analizar
-                script {
-                    def scanResult = sh(
-                        script: "python3 virustotal_scan.py target/MyWebApp.jar",
-                        returnStatus: true
-                    )
-                    
-                    if (scanResult != 0) {
-                        error "El análisis de seguridad ha fallado. Revisa los logs para más detalles."
-                    }
-                }
-            }
-        }
-        
-        stage('Deploy') {
-            when {
-                expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
-            }
-            steps {
-                echo 'Deploying application...'
-                // Comandos para desplegar tu aplicación
-            }
-        }
+	dir('preuniversitario') {
+	        stage('Build') {
+	            steps {
+	                echo 'Building application...'
+	                // Aquí van los comandos para construir tu aplicación
+	                // Por ejemplo: sh 'mvn clean package'
+			sh 'mvn clean package -DskipTests'
+	            }
+	        }
+	        
+	        stage('Security Scan') {
+	            steps {
+	                echo 'Realizando análisis de seguridad con VirusTotal...'
+	                
+	                // Ejecutar el script de Python para cada archivo que necesites analizar
+	                script {
+	                    def scanResult = sh(
+	                        script: "python3 virustotal_scan.py target/MyWebApp.jar",
+	                        returnStatus: true
+	                    )
+	                    
+	                    if (scanResult != 0) {
+	                        error "El análisis de seguridad ha fallado. Revisa los logs para más detalles."
+	                    }
+	                }
+	            }
+	        }
+	        
+	        stage('Deploy') {
+	            when {
+	                expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
+	            }
+	            steps {
+	                echo 'Deploying application...'
+	                // Comandos para desplegar tu aplicación
+	            }
+	        }
+	}
     }
     
     post {
