@@ -6,20 +6,21 @@ pipeline {
     }
     
     stages {
-	dir('preuniversitario') {
-	        stage('Build') {
-	            steps {
-	                echo 'Building application...'
-	                // Aquí van los comandos para construir tu aplicación
-	                // Por ejemplo: sh 'mvn clean package'
+        stage('Build') {
+            steps {
+		dir('preuniversitario') {
+                	echo 'Building application...'
+                	// Aquí van los comandos para construir tu aplicación
+                	// Por ejemplo: sh 'mvn clean package'
 			sh 'mvn clean package -DskipTests'
-	            }
-	        }
-	        
-	        stage('Security Scan') {
-	            steps {
-	                echo 'Realizando análisis de seguridad con VirusTotal...'
-	                
+		}
+            }
+        }
+        
+        stage('Security Scan') {
+            steps {
+                echo 'Realizando análisis de seguridad con VirusTotal...'
+                dir('preuniversitario'){
 	                // Ejecutar el script de Python para cada archivo que necesites analizar
 	                script {
 	                    def scanResult = sh(
@@ -31,19 +32,19 @@ pipeline {
 	                        error "El análisis de seguridad ha fallado. Revisa los logs para más detalles."
 	                    }
 	                }
-	            }
-	        }
-	        
-	        stage('Deploy') {
-	            when {
-	                expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
-	            }
-	            steps {
-	                echo 'Deploying application...'
-	                // Comandos para desplegar tu aplicación
-	            }
-	        }
-	}
+		}
+            }
+        }
+        
+        stage('Deploy') {
+            when {
+                expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
+            }
+            steps {
+                echo 'Deploying application...'
+                // Comandos para desplegar tu aplicación
+            }
+        }
     }
     
     post {
