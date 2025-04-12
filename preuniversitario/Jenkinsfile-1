@@ -10,7 +10,7 @@ pipeline {
     stage('Scan') {
       steps {
         dir('preuniversitario') {
-          withSonarQubeEnv('sq1') {
+          withSonarQubeEnv('sql1') {
             sh 'mvn clean verify sonar:sonar -Dsonar.login=$SONAR_TOKEN'
           }
         }
